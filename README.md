@@ -19,6 +19,7 @@ The `/django_static/` and `/media/` subpaths also serve static files.
 2. Run this in the react directory to generate the production build:
 
 ```
+	npm install
 	npm run build 
 ```
 NGINX container only serves React App's production build.

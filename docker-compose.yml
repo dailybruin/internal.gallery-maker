@@ -1,8 +1,7 @@
 version: "3"
 services:
-  nginx:
+  web:
     image: nginx-arch:latest
-    container_name: nginx-arche
     volumes:
       - ./:/var/www/
     ports:

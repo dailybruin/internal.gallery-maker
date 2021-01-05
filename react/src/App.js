@@ -5,20 +5,8 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p> hi, I would recommend adding react router first. React router is given a list of urls and which component should be rendered at which urls </p>
+      <p> Here is an  <a href="https://github.com/dailybruin/interactive.2020.registration-issue"> example of react router usage </a> </p>
     </div>
   );
 }
