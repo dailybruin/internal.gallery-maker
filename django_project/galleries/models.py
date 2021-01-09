@@ -17,10 +17,10 @@ class Gallery(models.Model):
 class Image(models.Model):
 
 	img_url = models.URLField(max_length=200)
-	name = models.TextField(max_length=50)
+	description = models.TextField(max_length=300, default="")
 
 	# foregin key
-	gallery_id = models.ForeignKey(Gallery, on_delete=models.CASCADE, null=True )
+	gallery_id = models.ForeignKey(Gallery, on_delete=models.CASCADE )
 
 
 
