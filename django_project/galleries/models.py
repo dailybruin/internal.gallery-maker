@@ -13,6 +13,24 @@ class Gallery(models.Model):
 	name = models.TextField(max_length=50)
 
 
+	ALT= 'alt'
+	NOTALT = 'notalt'
+
+	POSSIBLE_VIEW_CHOICES = [
+
+    (ALT, 'alternating'),
+    (NOTALT, 'not-alternating')
+
+	]
+
+	view_choices = models.CharField(
+		max_length=10,
+		choices=POSSIBLE_VIEW_CHOICES,
+		default = ALT
+	)
+
+
+
 
 class Image(models.Model):
 
