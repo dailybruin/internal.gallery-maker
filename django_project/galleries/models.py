@@ -10,8 +10,9 @@ class Gallery(models.Model):
 	# gallery should have id (primary key)
 	#  	 and a gallery_name (textfield)
 
-	name = models.TextField(max_length=50)
+	description = models.TextField(max_length=50)
 
+	credits = models.TextField(max_length=50, null=True)
 
 	ALT= 'alt'
 	NOTALT = 'notalt'
@@ -38,13 +39,5 @@ class Image(models.Model):
 	description = models.TextField(max_length=300, default="")
 
 	# foregin key
-	gallery_id = models.ForeignKey(Gallery, on_delete=models.CASCADE )
-
-
-
-	# 
-	#
-	#
-	#
-
+	gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE )
 
