@@ -65,6 +65,9 @@ INSTALLED_APPS = [
     # dependencies
     'corsheaders',
     'rest_framework', # REST API Utils
+
+    'utils',
+    'galleries'
 ]
 
 MIDDLEWARE = [
