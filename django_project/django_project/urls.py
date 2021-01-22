@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('utils/', include('utils.urls')),
     path('gallery/', include('galleries.urls')),
-    path('get_gallery_data/<int:pk>', views.GalleryViewSet.as_view({'get':'retrieve'}))
+    path('get_gallery_data/<int:pk>', views.GalleryRetrieve.as_view())
 ]
