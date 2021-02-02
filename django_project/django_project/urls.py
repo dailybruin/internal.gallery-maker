@@ -21,6 +21,7 @@ from galleries.views import image
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('utils/', include('utils.urls')),
-    path('test/',test),
-    path('image/',image)
+    path('test/', test),
+    path('image/', image),
+    path('oauth/', include('oauth.urls'))
 ]

@@ -67,7 +67,8 @@ INSTALLED_APPS = [
     'rest_framework', # REST API Utils
 
     'utils',
-    'galleries'
+    'galleries',
+    'oauth'
 ]
 
 MIDDLEWARE = [
