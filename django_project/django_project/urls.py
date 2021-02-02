@@ -15,13 +15,12 @@ Including another URLconf
 """
 from django.urls import path, include
 from django.contrib import admin
-from galleries.views import test
-from galleries.views import image
+from galleries import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('utils/', include('utils.urls')),
-    path('test/', test),
-    path('image/', image),
     path('oauth/', include('oauth.urls'))
+    path('gallery/', include('galleries.urls')),
+    path('get_gallery_data/<int:pk>', views.GalleryRetrieve.as_view())
 ]

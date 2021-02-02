@@ -1,15 +1,21 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-# Create your views here.
-def test(request):
-    print(request)
-    print(request.GET)
-    return HttpResponse("Done!")
+from .serializers import GallerySerializer, ImageSerializer
+from .models import Gallery, Image
+from .pagination import GalleryPagination
+from rest_framework import viewsets, generics
+from rest_framework.permissions import IsAuthenticated
 
-@csrf_exempt
-def image(request):
-    print(request.POST)
-    print(request.POST['img'])
-    return HttpResponse("Received")
-    
+class GalleryViewSet(viewsets.ModelViewSet):
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
+    pagination_class = GalleryPagination
+    #permission_classes = [IsAuthenticated]
+
+class ImageViewSet(viewsets.ModelViewSet):
+    queryset = Image.objects.all()
+    serializer_class = ImageSerializer
+    #permission_classes = [IsAuthenticated]
+
+class GalleryRetrieve(generics.RetrieveAPIView):
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializer
+

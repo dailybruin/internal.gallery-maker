@@ -12,9 +12,6 @@ function Home(props) {
         <Link to="/update/1">Update</Link>
       </div>
       <div>
-        <Link to="/tester">Tester</Link>
-      </div>
-      <div>
         <Link to="/signup">Signup</Link>
       </div>
     </div>

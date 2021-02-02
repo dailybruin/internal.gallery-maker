@@ -39,5 +39,5 @@ class Image(models.Model):
 	description = models.TextField(max_length=300, default="")
 
 	# foregin key
-	gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE )
+	gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="images")
 
