@@ -1,8 +1,12 @@
-from .serializers import GallerySerializer, ImageSerializer
+from .serializers import GallerySerializer, ImageSerializer, MainSiteGallerySerializer
 from .models import Gallery, Image
 from .pagination import GalleryPagination
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
+
+
+
+
 
 class GalleryViewSet(viewsets.ModelViewSet):
     queryset = Gallery.objects.all()
@@ -17,5 +21,5 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 class GalleryRetrieve(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
-    serializer_class = GallerySerializer
+    serializer_class = MainSiteGallerySerializer
 
