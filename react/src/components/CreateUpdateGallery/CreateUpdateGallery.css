@@ -10,9 +10,11 @@
     border: 7px solid transparent;
     margin: 3px;
     cursor: pointer;
+    height: 200px;
+    width: auto;
 }
 
-.img-grid img.img-selected {
+.img-grid .img-selected {
     border: 7px solid blue;
 }
 
@@ -37,6 +39,11 @@
       position: relative;
       display: inline-block;
       font-size: 1.75em;
+  }
+
+  .selected-img-container img {
+      width: 240px;
+      height: auto;
   }
 
   .button-overlay {

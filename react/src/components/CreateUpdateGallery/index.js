@@ -7,7 +7,7 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 function SelectedImage(props) {
     return (
         <div className="selected-img-container">
-            <img src={props.img.small_img_url}
+            <img src={props.img.source_url}
                 alt={props.img.alt_text} 
             />
             <FontAwesomeIcon 
@@ -29,7 +29,6 @@ function CreateUpdateGallery(props) {
                 let data = res.data.map(img => 
                     ({
                         source_url: img.source_url,
-                        small_img_url: img.media_details.sizes['db-multimedia'].source_url,
                         alt_text: img.alt_text,
                         selected: false
                     })
@@ -80,7 +79,7 @@ function CreateUpdateGallery(props) {
                     <div className="img-grid">
                         {
                             wpImageData.map(img => 
-                                <img src={img.small_img_url} 
+                                <img src={img.source_url} 
                                     alt={img.alt_text}
                                     className={img.selected ? "img-selected" : ""}
                                     onClick={() => handleImageClick(img)}
