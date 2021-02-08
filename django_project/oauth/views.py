@@ -37,25 +37,24 @@ def slack_auth(request):
     print(jsoned["ok"])
     loggedIn = jsoned["ok"]
     userId = jsoned["authed_user"]["id"]
-    print(userId)
+    print('userId', userId)
     print(type(loggedIn))
     if loggedIn:
-        user = authenticate(username=userId,password=None,email=None)
-        print(request)
-        print(user)
+        user = authenticate(username=userId,password='')
+        print('Request', request)
+        print('user', user)
         instance = User.objects.all()
-        print(instance)
-        instance.delete()
+        print('instance', instance)
+        # instance.delete()
         if user is not None:
             # The user already exists in the database
             return HttpResponse("Success with an existing user")
         else:
             # A new user needs to be made
-            new_user = User.objects.create_user(username=userId,password=None,email=None)
-            new_user.set_unusable_password()
+            new_user = User.objects.create_user(username=userId, password='')
             new_user.is_active = True
             new_user.save()
-            new_user = authenticate(username=userId,password=None)
+            new_user = authenticate(username=userId,password='')
             return HttpResponse("Success after making a new user")
     if not loggedIn:
         return HttpResponse("Failure! ok=false")
