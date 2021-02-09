@@ -2,6 +2,8 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 function Home(props) {
+  console.log('props.isLoggedIn', props.isLoggedIn);
+  console.log('props.isLoading', props.isLoading);
   return props.isLoggedIn ? (
     <div>
       <div>Home Page</div>
@@ -15,6 +17,8 @@ function Home(props) {
         <Link to="/signup">Signup</Link>
       </div>
     </div>
+  ) : props.isLoading ? (
+    <div>Loading</div>
   ) : (
     <Redirect to="/signup" />
   );
