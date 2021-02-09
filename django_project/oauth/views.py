@@ -44,6 +44,8 @@ def slack_auth(request):
         print('user', user)
         instance = User.objects.all()
         print('instance', instance)
+        sessions = Session.objects.all()
+        # sessions.delete()
         # instance.delete()
         if user is not None:
             # The user already exists in the database
@@ -69,7 +71,8 @@ def view(request):
 def get_logged_in(request):
     print("request.user authenticate", request.user.is_authenticated)
     print('request.user', request.user)
-    print('one more thing', Session.objects.all())
+    sessions = Session.objects.all()
+    print('sessions', sessions )
     instance = User.objects.all()
     print('instance', instance)
     if request.user.is_authenticated:

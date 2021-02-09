@@ -1,30 +1,40 @@
 import React, { useState } from 'react';
 import SlackLogin from 'react-slack-login';
+import './index.css';
 
 function Signup() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  function onFailure() {
-    setLoggedIn(false);
-    console.log('failure');
-  }
-  function onSuccess(code) {
-    setLoggedIn(true);
-    console.log('success');
-    console.log('code', code);
-  }
-  let slackClientId="4526132454.1654017102375"
-  let slackUserScope="identity.basic"
-  let redirectUrl="http://localhost:8000/django/oauth/slack_auth"
-  let url = `https://slack.com/oauth/v2/authorize?user_scope=${slackUserScope}&client_id=${slackClientId}`
-    if (redirectUrl) {
-      url += `&redirect_uri=${redirectUrl}`
-    }
+  // const [loggedIn, setLoggedIn] = useState(false);
+  // function onFailure() {
+  //   setLoggedIn(false);
+  //   console.log('failure');
+  // }
+  // function onSuccess(code) {
+  //   setLoggedIn(true);
+  //   console.log('success');
+  //   console.log('code', code);
+  // }
+  // let slackClientId = '4526132454.1654017102375';
+  // let slackUserScope = 'identity.basic';
+  // let redirectUrl = 'http://localhost:8000/django/oauth/slack_auth';
+  // let url = `https://slack.com/oauth/v2/authorize?user_scope=${slackUserScope}&client_id=${slackClientId}`;
+  // if (redirectUrl) {
+  //   url += `&redirect_uri=${redirectUrl}`;
+  // }
   return (
-    <div>
-      <a href={url}>
-        Do things.
-      </a>
-      {loggedIn ? <div>Success</div> : <div>Failure</div>}
+    <div className="signup-container">
+      {/* <a href={url}>Do things.</a> */}
+      <div className="slack-link-container">
+        <a href="https://slack.com/oauth/v2/authorize?user_scope=identity.basic&client_id=4526132454.1654017102375">
+          <img
+            alt="Sign in with Slack"
+            height="40"
+            width="172"
+            src="https://platform.slack-edge.com/img/sign_in_with_slack.png"
+            srcset="https://platform.slack-edge.com/img/sign_in_with_slack.png 1x, https://platform.slack-edge.com/img/sign_in_with_slack@2x.png 2x"
+          />
+        </a>
+        {/* {loggedIn ? <div>Success</div> : <div>Failure</div>} */}
+      </div>
     </div>
   );
 }
