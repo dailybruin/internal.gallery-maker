@@ -1,6 +1,6 @@
 # start.django-react
 
-A single Docker container hosting both React and Django. 
+A single Docker container hosting both React and Django.
 
 The React App is accessible directly at `localhost:8000`.
 The Django API is accessible at `localhost:8000/django/`.
@@ -10,18 +10,21 @@ The `/django_static/` and `/media/` subpaths also serve static files.
 ## How to use
 
 1. Place the .env file in the root folder, and add the following:
+
 ```
 	DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
 	SECRET_KEY=your_secret_key
 	DEBUG=True
+	SLACK_SECRET_KEY=get_from_slack
 ```
 
 2. Run this in the react directory to generate the production build:
 
 ```
 	npm install
-	npm run build 
+	npm run build
 ```
+
 NGINX container only serves React App's production build.
 
 3. (Optional) Modify `utils/urls.py` and `utils/views.py` in the Django project to handle adding meta tags. Instructions have been added in those files.
@@ -49,14 +52,16 @@ NGINX container only serves React App's production build.
 ### Modifications to Django
 
 In settings.py, we have to add the following to allow NGINX to serve the files correctly.
+
 ```
 	FORCE_SCRIPT_NAME = '/django'
 	STATIC_URL = '/django_static/'
-	STATIC_ROOT = os.path.abspath('/var/www/django_static') 
+	STATIC_ROOT = os.path.abspath('/var/www/django_static')
 
 	MEDIA_URL = '/media/'
 	MEDIA_ROOT = os.path.abspath('/var/www/media/')
 ```
+
 These are explained in comments in settings.py.
 
 ### Things to handle
@@ -69,15 +74,13 @@ These are explained in comments in settings.py.
 1. Should `npm run build` be included in entrypoint script?
 2. Testing
 
-
 ### Useful links
 
 To inspect a container:
 
-```	
+```
 	docker exec -it <container-id> /bin/sh
 ```
 
 Useful links:
-	
-	https://serverfault.com/questions/562756/how-to-remove-the-path-with-an-nginx-proxy-pass
+https://serverfault.com/questions/562756/how-to-remove-the-path-with-an-nginx-proxy-pass
