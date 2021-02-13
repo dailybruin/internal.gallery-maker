@@ -14,9 +14,9 @@ function App() {
     let response = await fetch(
       'http://localhost:8000/django/oauth/get_logged_in'
     );
-    console.log('response', response);
+    // console.log('response', response);
     const text = await response.text();
-    console.log('response text', text);
+    // console.log('response text', text);
     if (text == 'True') {
       setLoggedIn(true);
       setLoading(false);

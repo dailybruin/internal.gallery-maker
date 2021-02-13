@@ -36,6 +36,7 @@ def slack_auth(request):
     print(jsoned["ok"])
     loggedIn = jsoned["ok"]
     userId = jsoned["authed_user"]["id"]
+    name = jsoned["authed_user"]["name"]
     print('userId', userId)
     print(type(loggedIn))
     if loggedIn:
@@ -63,10 +64,6 @@ def slack_auth(request):
             return redirect('/')
     if not loggedIn:
         return HttpResponse("Failure! ok=false")
-
-def view(request):
-    print(request.user)
-    return "anything"
 
 def get_logged_in(request):
     print("request.user authenticate", request.user.is_authenticated)
