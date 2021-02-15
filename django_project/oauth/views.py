@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 import requests
 import json
@@ -8,17 +8,19 @@ import os
 import environ
 from django.contrib.sessions.models import Session
 from django_project.settings import SLACK_SECRET_KEY
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 def slack_auth(request):
-    print(request)
-    print(request.GET)
+    logging.debug(request)
+    logging.debug(request.GET)
     API_ENDPOINT = "https://slack.com/api/oauth.v2.access"
     # your API key here 
     code = request.GET['code']
-    print(code)
+    logging.debug(code)
     # data to be sent to api 
-    print(SLACK_SECRET_KEY)
+    logging.debug(SLACK_SECRET_KEY)
     data = {
         'client_id':'4526132454.1654017102375',
         'client_secret':SLACK_SECRET_KEY,
@@ -27,25 +29,22 @@ def slack_auth(request):
         } 
     # sending post request and saving response as response object 
     r = requests.post(url = API_ENDPOINT, data = data) 
-    print(r.request.body)
-    print(r.request)
-    print(r.request.headers)
-    print(r.text)
+    logging.debug("Request Body", r.request.body)
+    logging.debug("Request", r.request)
+    logging.debug("Request headers", r.request.headers)
+    logging.debug("Request text", r.text)
     jsoned = json.loads(r.text)
-    print("----------")
-    print(jsoned["ok"])
+    logging.debug(jsoned["ok"])
     loggedIn = jsoned["ok"]
     userId = jsoned["authed_user"]["id"]
-    name = jsoned["authed_user"]["name"]
-    print('userId', userId)
-    print(type(loggedIn))
+    logging.debug('userId', userId)
     if loggedIn:
         user = authenticate(username=userId,password='')
-        print('Request', request)
-        print('user', user)
+        logging.debug('Request', request)
+        logging.debug('user', user)
         instance = User.objects.all()
-        print('instance', instance)
-        sessions = Session.objects.all()
+        logging.debug('instance', instance)
+        # sessions = Session.objects.all()
         # sessions.delete()
         # instance.delete()
         if user is not None:
@@ -63,15 +62,17 @@ def slack_auth(request):
             # return HttpResponse("Success after making a new user")
             return redirect('/')
     if not loggedIn:
-        return HttpResponse("Failure! ok=false")
+        return JsonResponse({
+            "error": "error communicating with Slack API"
+        }, safe=False)
 
 def get_logged_in(request):
-    print("request.user authenticate", request.user.is_authenticated)
-    print('request.user', request.user)
+    logging.debug("request.user authenticate", request.user.is_authenticated)
+    logging.debug('request.user', request.user)
     sessions = Session.objects.all()
-    print('sessions', sessions )
+    logging.debug('sessions', sessions )
     instance = User.objects.all()
-    print('instance', instance)
+    logging.debug('instance', instance)
     if request.user.is_authenticated:
         return HttpResponse(True)
     else:
