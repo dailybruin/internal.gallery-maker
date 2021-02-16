@@ -9,7 +9,7 @@ function Home(props) {
                 <Link to='/create'>Create</Link>
             </div>
             <div>
-                <Link to='/update/1'>Update</Link>
+                <Link to='/update/2'>Update</Link>
             </div>
         </div>
     );
