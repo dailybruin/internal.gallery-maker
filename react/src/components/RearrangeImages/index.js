@@ -1,7 +1,4 @@
-import React from 'react';
+import RearrangeImages from './RearrangeImages.js';
+import ImageList from './ImageList.js';
 
-const RearrangeImages = (props) => {
-  return <div>hello</div>;
-};
-
-export default RearrangeImages;
+export { RearrangeImages, ImageList };
