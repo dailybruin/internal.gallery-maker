@@ -3,18 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
-import store from "./redux/store";
+import { PersistGate } from 'redux-persist/integration/react'
+import configureStore from "./redux/configureStore";
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import { Provider } from 'react-redux'
 
-
+const {store, persistor} = configureStore()
 
 ReactDOM.render(
 	<Provider store={store}>
-	    <Router>
-	        <App />
-	    </Router>
+		<PersistGate loading={null} persistor={persistor}>
+			<Router>
+				<App />
+			</Router>
+		</PersistGate>
     </Provider>,
     document.getElementById('root')
     );
