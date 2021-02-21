@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Table, Space } from "antd";
 import axios from "axios";
 
 import classes from "./gallery-list.module.css";
 
 const GalleryList = (props) => {
     const [pageNo, setPageNo] = useState(1);
-    const [perPage, setPerPage] = useState(1);
+    const [perPage, setPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
     const [galleries, setGalleries] = useState([
         {
@@ -14,66 +15,124 @@ const GalleryList = (props) => {
             descr: "first one",
             id: 0,
         },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
+        {
+            name: "hello",
+            descr: "first one",
+            id: 0,
+        },
     ]);
-
-    const getPageNoOptions = () => {
-        const arr = [];
-        for (let i = 1; i <= totalPages; i++)
-            arr.push(
-                <option key={`page-${i}`} value={i}>
-                    {i}
-                </option>
-            );
-        return arr;
-    };
 
     useEffect(() => {}, [pageNo, perPage]);
 
+    const columns = [
+        {
+            title: "ID",
+            dataIndex: "id",
+            key: "id",
+        },
+        {
+            title: "Name",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "Description",
+            dataIndex: "descr",
+            key: "descr",
+        },
+        {
+            title: "Actions",
+            key: "action",
+            render: (text, record) => (
+                <Space size="middle">
+                    <Link to={`/update/${record.id}`}>Edit</Link>
+                    <a style={{ color: "red" }}>Delete</a>
+                </Space>
+            ),
+        },
+    ];
+
     return (
         <>
-            <table className={classes.Galleries}>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Description</th>
-                </tr>
-                {galleries.map((gallery, idx) => (
-                    <tr>
-                        <th>{idx + 1}</th>
-                        <td>{gallery.name}</td>
-                        <td>{gallery.descr}</td>
-                        <td>
-                            <button>
-                                <Link to={`/update/${gallery.id}`}>Edit</Link>
-                            </button>
-                        </td>
-                    </tr>
-                ))}
-            </table>
-            <div className={classes.Buttons}>
-                <button className={classes.PageButton}>Previous</button>
-                <button className={classes.PageButton}>Next</button>
-            </div>
-            <div className={classes.PageSelect}>
-                <div className={classes.FormGroup}>
-                    <label htmlFor="page-no" className={classes.FormGroup}>
-                        Page
-                    </label>
-                    <select id="page-no">{getPageNoOptions()}</select>
-                </div>
-                <div className={classes.FormGroup}>
-                    <label htmlFor="per-page" className={classes.FormGroup}>
-                        Galleries Per Page
-                    </label>
-                    <select id="per-page">
-                        <option value="10">10</option>
-                        <option value="25">20</option>
-                        <option value="50">50</option>
-                        <option value="75">75</option>
-                        <option value="100">100</option>
-                    </select>
-                </div>
-            </div>
+            <Table
+                dataSource={galleries}
+                columns={columns}
+                pagination={{
+                    showSizeChanger: true,
+                    showQuickJumper: true,
+                    pageSizeOptions: [10, 20, 50, 100],
+                }}
+            />
         </>
     );
 };
