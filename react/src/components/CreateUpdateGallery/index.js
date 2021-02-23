@@ -3,6 +3,8 @@ import axios from 'axios'
 import './CreateUpdateGallery.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
+//import { useSelector, useDispatch } from 'react-redux'
+import getStore from '../../redux/configureStore'
 
 const DEFAULT_PER_PAGE = 50;
 
@@ -23,6 +25,16 @@ function SelectedImage(props) {
     );
 }
 
+//retrieve redux state
+const selectReduxGallery = (state) => {
+    return state.editGallery.gallery;
+}
+
+//returns array of selected image urls from redux store
+const selectedImages = () => {
+    return selectReduxGallery(getStore().store.getState()).map((el) => el.url);
+}
+
 /*
 state for displayed image data and selected images is handled by reducer.
 necessary because the effect which makes a GET request to the WP endpoint
@@ -36,23 +48,27 @@ to a reducer.
 */
 const initialState = { imageData: [], selectedImages: [] }
 
-function toggleSelectedField(imgURL, imageData) {
+const toggleSelectedField = (imgURL, imageData) => {
     return imageData.map(
         img => img.sourceURL === imgURL ? {...img, selected: !img.selected} : img
     )
 }
 
-function setImageData(imageData, selectedImages) {
+const setImageData = (imageData, selectedImages) => {
     return imageData.map(img => 
         ({
             sourceURL: img.source_url,
             selected: selectedImages.includes(img.source_url)
+            //selected: selectedImages.includes(img.source_url)
         })
     );
 }
 
-function reducer(state, action) {
+const reducer = (state, action) => {
     let newImageData, newSelectedImages;
+    let reduxDispatch = getStore().store.dispatch;
+    let reduxGallery = selectReduxGallery(getStore().store.getState());
+
     switch (action.type) {
         case 'updatePage':
             newImageData = setImageData(action.payload, state.selectedImages);
@@ -70,8 +86,17 @@ function reducer(state, action) {
             return { ...state, imageData: newImageData, selectedImages: newSelectedImages }
 
         case 'addSelectedImage':
+            console.log(selectedImages());
+            console.log(reduxGallery)
             newImageData = toggleSelectedField(action.payload, state.imageData);
-            newSelectedImages = [...state.selectedImages, action.payload]
+            reduxDispatch({
+                type: "EDIT_GALLERY",
+                payload: [...reduxGallery, {
+                    url: action.payload,
+                    caption: ""
+                }]
+            });
+            newSelectedImages = [...state.selectedImages, action.payload];
             return { ...state, imageData: newImageData, selectedImages: newSelectedImages }
 
         default:
@@ -86,6 +111,9 @@ function CreateUpdateGallery(props) {
     const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
     const [pageInput, setPageInput] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+
+    // const reduxGallery = useSelector(state => state.editGallery.gallery);
+    // const reduxDispatch = useDispatch();
 
     useEffect(() => {
         if (props.match.path === '/update/:id') {
@@ -123,6 +151,13 @@ function CreateUpdateGallery(props) {
         } 
         else {
             dispatch({ type: 'addSelectedImage', payload: clickedImg.sourceURL });
+            // reduxDispatch({
+            //     type: "EDIT_GALLERY",
+            //     payload: [...reduxGallery, {
+            //         url: clickedImg.sourceURL,
+            //         caption: ""
+            //     }]
+            // });
         }
     }
 
@@ -224,11 +259,11 @@ function CreateUpdateGallery(props) {
                     </div>
                     <div className="selected-imgs">
                         {
-                            state.selectedImages.length > 0 ?
+                            selectedImages().length > 0 ?
                                 <div>
-                                    <p>{`Selected images: ${state.selectedImages.length}`}</p>
+                                    <p>{`Selected images: ${selectedImages().length}`}</p>
                                     {
-                                        state.selectedImages.map(imgURL => 
+                                        selectedImages().map(imgURL => 
                                             <SelectedImage
                                                 sourceURL={imgURL}
                                                 onRemoveClick={removeSelectedImage}
