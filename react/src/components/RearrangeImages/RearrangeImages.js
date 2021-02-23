@@ -3,6 +3,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { useSelector, useDispatch } from 'react-redux';
+import update from 'immutability-helper';
 
 import ImageList from './ImageList';
 import { isTouchDevice } from './utils';
@@ -47,9 +48,12 @@ function RearrangeImages() {
 
   const moveImage = (dragIndex, hoverIndex) => {
     const draggedImage = reduxGallery[dragIndex];
-    let rearrangedGallery = [...reduxGallery];
-    rearrangedGallery.splice(dragIndex, 1);
-    rearrangedGallery.splice(hoverIndex, 0, draggedImage);
+    let rearrangedGallery = update(reduxGallery, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, draggedImage],
+      ],
+    });
     dispatch({
       type: 'EDIT_GALLERY',
       payload: rearrangedGallery,
