@@ -75,7 +75,7 @@ function RearrangeImages() {
       <button onClick={resetGallery}>delete gallery</button>
       {reduxGallery && reduxGallery.length > 0 && (
         <div className="rearrange-images-container">
-          <h3 className="text-center">Drag the Images to rearrange images</h3>
+          <h3 className="text-center">Drag to rearrange images</h3>
           <DndProvider backend={backendForDND}>
             <ImageList images={reduxGallery} moveImage={moveImage} />
           </DndProvider>
