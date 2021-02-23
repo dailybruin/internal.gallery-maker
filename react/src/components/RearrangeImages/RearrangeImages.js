@@ -34,7 +34,6 @@ function RearrangeImages() {
   };
 
   const addsecondcat = () => {
-    console.log('Adding entry');
     dispatch({
       type: 'EDIT_GALLERY',
       payload: [
@@ -70,17 +69,18 @@ function RearrangeImages() {
   };
 
   return (
-    <div className="rearrange-images-container">
-      <h1 className="text-center">Rearrange Images</h1>
+    <div>
       <button onClick={addfirstcat}> add first cat </button>
       <button onClick={addsecondcat}> add second cat </button>
       <button onClick={resetGallery}>delete gallery</button>
       {reduxGallery && reduxGallery.length > 0 && (
-        <h3 className="text-center">Drag the Images to change positions</h3>
+        <div className="rearrange-images-container">
+          <h3 className="text-center">Drag the Images to rearrange images</h3>
+          <DndProvider backend={backendForDND}>
+            <ImageList images={reduxGallery} moveImage={moveImage} />
+          </DndProvider>
+        </div>
       )}
-      <DndProvider backend={backendForDND}>
-        <ImageList images={reduxGallery} moveImage={moveImage} />
-      </DndProvider>
     </div>
   );
 }
