@@ -15,21 +15,7 @@ const backendForDND = isTouchDevice() ? TouchBackend : HTML5Backend;
 function RearrangeImages() {
   const reduxGallery = useSelector((state) => state.editGallery.gallery); // for retrieving state
   const dispatch = useDispatch(); // for changing state
-
-  console.log(reduxGallery);
-  const addImage = () => {
-    console.log('Adding entry');
-    dispatch({
-      type: 'EDIT_GALLERY',
-      payload: [
-        ...reduxGallery,
-        {
-          url: 'https://redux.js.org/img/redux.svg',
-          caption: 'Redux',
-        },
-      ],
-    });
-  };
+  // console.log(reduxGallery);
 
   const addfirstcat = () => {
     console.log('Adding entry');
@@ -41,6 +27,23 @@ function RearrangeImages() {
           url:
             'https://ichef.bbci.co.uk/news/1024/cpsprodpb/151AB/production/_111434468_gettyimages-1143489763.jpg',
           caption: 'Redux',
+          id: 'string',
+        },
+      ],
+    });
+  };
+
+  const addsecondcat = () => {
+    console.log('Adding entry');
+    dispatch({
+      type: 'EDIT_GALLERY',
+      payload: [
+        ...reduxGallery,
+        {
+          url:
+            'https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+          caption: 'Redux',
+          id: 'string2',
         },
       ],
     });
@@ -65,11 +68,12 @@ function RearrangeImages() {
       type: 'DELETE_GALLERY',
     });
   };
+
   return (
     <div className="rearrange-images-container">
       <h1 className="text-center">Rearrange Images</h1>
-      <button onClick={addImage}> add to fake gallery </button>
       <button onClick={addfirstcat}> add first cat </button>
+      <button onClick={addsecondcat}> add second cat </button>
       <button onClick={resetGallery}>delete gallery</button>
       {reduxGallery && reduxGallery.length > 0 && (
         <h3 className="text-center">Drag the Images to change positions</h3>
