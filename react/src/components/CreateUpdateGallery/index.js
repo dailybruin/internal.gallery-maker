@@ -90,7 +90,7 @@ function CreateUpdateGallery(props) {
     useEffect(() => {
         if (props.match.path === '/update/:id') {
             axios.all([
-                axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=1&per_page=${DEFAULT_PER_PAGE}`),
+                axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=1&per_page=${DEFAULT_PER_PAGE}&orderby=date`),
                 axios.get(`https://gallery.dailybruin.com/django/gallery/${props.match.params.id}`)
             ])
                 .then(axios.spread((wpRes, galleryRes) => {
@@ -103,7 +103,7 @@ function CreateUpdateGallery(props) {
     }, [props.match.path, props.match.params.id]);
 
     useEffect(() => {
-        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}`)
+        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}&orderby=date`)
             .then(res => {
                 dispatch({ type: 'updatePage', payload: res.data });
                 setTotalPages(res.headers["x-wp-totalpages"]);
@@ -163,76 +163,82 @@ function CreateUpdateGallery(props) {
             </div>
             <div>
                 <div className="columns">
-                    <div>
-                        <div className="img-grid">
-                            {
-                                state.imageData.map(img => 
-                                    <img src={img.sourceURL} 
-                                        alt=""
-                                        className={img.selected ? "img-selected" : ""}
-                                        onClick={() => handleImageClick(img)}
-                                        key={img.sourceURL}
+                    <div className="img-grid">
+                        <p>
+                            Select images to put in the gallery (don't worry about order now; you can reorder them later!)
+                        </p>
+                        {
+                            state.imageData.map(img => 
+                                <img src={img.sourceURL} 
+                                    alt=""
+                                    className={img.selected ? "img-selected" : ""}
+                                    onClick={() => handleImageClick(img)}
+                                    key={img.sourceURL}
+                                />
+                            )
+                        }
+                    </div>
+                    <div className="pagination-container">
+                        <button 
+                            className="pag-button"
+                            onClick={() => setNextPage(-1)}
+                        >
+                            Previous
+                        </button>
+                        <div className="pag-input-container">
+                            <form className="pag-input" onSubmit={handlePageSubmit}>
+                                <label>
+                                    Page 
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        max={totalPages}
+                                        value={pageInput}
+                                        onChange={e => setPageInput(e.target.value)}
                                     />
-                                )
-                            }
+                                </label>
+                            </form>
+                            <form className="pag-input">
+                                <label>
+                                    Images Per Page 
+                                    <select 
+                                        value={perPage} 
+                                        onChange={handlePerPageChange} 
+                                        id="perPage"
+                                    >
+                                        <option value="10">10</option>
+                                        <option value="25">20</option>
+                                        <option value="50">50</option>
+                                        <option value="75">75</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label>
+                            </form>
                         </div>
-                        <div className="pagination">
-                            <button 
-                                className="pag-button"
-                                onClick={() => setNextPage(-1)}
-                            >
-                                Previous
-                            </button>
-                            <div className="pag-input">
-                                <form onSubmit={handlePageSubmit}>
-                                    <label>
-                                        Page 
-                                        <input 
-                                            type="number" 
-                                            min="1" 
-                                            max={totalPages}
-                                            value={pageInput}
-                                            onChange={e => setPageInput(e.target.value)}
-                                        />
-                                    </label>
-                                </form>
-                                <form>
-                                    <label>
-                                        Images Per Page 
-                                        <select 
-                                            value={perPage} 
-                                            onChange={handlePerPageChange} 
-                                            id="perPage"
-                                        >
-                                            <option value="10">10</option>
-                                            <option value="25">20</option>
-                                            <option value="50">50</option>
-                                            <option value="75">75</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                    </label>
-                                </form>
-                            </div>
-                            <button 
-                                className="pag-button"
-                                onClick={() => setNextPage(1)}
-                            >
-                                    Next
-                            </button>
-                        </div>
+                        <button 
+                            className="pag-button"
+                            onClick={() => setNextPage(1)}
+                        >
+                                Next
+                        </button>
                     </div>
                     <div className="selected-imgs">
                         {
                             state.selectedImages.length > 0 ?
-                                state.selectedImages.map(imgURL => 
-                                    <SelectedImage
-                                        sourceURL={imgURL}
-                                        onRemoveClick={removeSelectedImage}
-                                        key={imgURL}
-                                    />
-                                )
+                                <div>
+                                    <p>{`Selected images: ${state.selectedImages.length}`}</p>
+                                    {
+                                        state.selectedImages.map(imgURL => 
+                                            <SelectedImage
+                                                sourceURL={imgURL}
+                                                onRemoveClick={removeSelectedImage}
+                                                key={imgURL}
+                                            />
+                                        )
+                                    }   
+                                </div>
                             :
-                                <div>Selected images will appear here</div>
+                                <p>Selected images will appear here</p>
                         }
                     </div>
                 </div>

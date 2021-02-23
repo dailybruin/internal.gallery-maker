@@ -4,6 +4,8 @@
 
 .img-grid {
     flex-grow: 1;
+    margin-bottom: 7em; /*how to decide what this should be?????????????????????????????????????????????????????????????????????????*/
+    /*it should be at least double the padding on the pagination container (1rem)*/
 }
 
 .img-grid img {
@@ -20,10 +22,11 @@
 
 .selected-imgs {
     background-color: lightgrey;
-    flex: 0 0 260px;
+    flex: 0 0 200px;
     height: 97vh;
     position: sticky;
     top: 0;
+    right: 5px;
     overflow-y: auto;
     overflow-x: hidden;
 
@@ -53,7 +56,7 @@
   }
 
   .selected-img-container img {
-      width: 230px;
+      width: 85%;
       height: auto;
   }
 
@@ -63,24 +66,31 @@
 
   .button-overlay {
     position: absolute;
-    top: -10px;
-    right: -10px;
+    top: -7.5%;
+    right: -1%;
     cursor: pointer;
   }
 
-  .pagination {
+  .pagination-container {
+      position: fixed;
+      bottom: 0;
       display: flex;
       justify-content: space-around;
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
+      width: calc(97vw - 200px);
+      background-color: white;
+      padding: 1em 0;
   }
 
   .pag-button {
       flex: 1;
   }
 
-  .pag-input {
-      flex: 1.5;
+  .pag-input-container {
+      flex: 2;
       display: flex;
       justify-content: space-around;
+  }
+
+  .pag-input {
+      margin: 0 1em;
   }
