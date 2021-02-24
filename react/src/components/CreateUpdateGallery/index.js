@@ -43,12 +43,6 @@ to a reducer.
 */
 const initialState = { imageData: [] }
 
-const toggleSelectedField = (imgURL, imageData) => {
-    return imageData.map(
-        img => img.sourceURL === imgURL ? {...img, selected: !img.selected} : img
-    )
-}
-
 const setImageData = (imageData, selectedImages) => {
     return imageData.map(img => 
         ({
@@ -58,7 +52,7 @@ const setImageData = (imageData, selectedImages) => {
     );
 }
 
-const make_reducer = (reduxGallery, reduxDispatch) => 
+const make_reducer = (reduxGallery) => 
     (state, action) => {
         let newImageData, selectedImages;
 
@@ -68,34 +62,16 @@ const make_reducer = (reduxGallery, reduxDispatch) =>
                 newImageData = setImageData(action.payload, selectedImages);
                 return { ...state, imageData: newImageData }
 
-            case 'updatePageAndSetSelectedImages':
+            case 'updatePageAndSetSelectedFields':
                 let [imageData, selectedImagesData] = action.payload;
                 selectedImages = selectedImagesData.map(img => img.img_url);
                 newImageData = setImageData(imageData, selectedImages);
-                let newReduxGallery = selectedImages.map(imgURL => ({url: imgURL, caption: ""}));
-                reduxDispatch({
-                    type: "EDIT_GALLERY",
-                    payload: [...newReduxGallery]
-                });
                 return {...state, imageData: newImageData }
             
-            case 'removeSelectedImage':
-                newImageData = toggleSelectedField(action.payload, state.imageData);
-                reduxDispatch({
-                    type: "REMOVE_GALLERY_IMAGE",
-                    payload: action.payload
-                })
-                return { ...state, imageData: newImageData }
-
-            case 'addSelectedImage':
-                newImageData = toggleSelectedField(action.payload, state.imageData);
-                reduxDispatch({
-                    type: "EDIT_GALLERY",
-                    payload: [...reduxGallery, {
-                        url: action.payload,
-                        caption: ""
-                    }]
-                });
+            case 'toggleSelectedField':
+                newImageData = state.imageData.map(
+                    img => img.sourceURL === action.payload ? {...img, selected: !img.selected} : img
+                );
                 return { ...state, imageData: newImageData }
 
             default:
@@ -106,7 +82,7 @@ const make_reducer = (reduxGallery, reduxDispatch) =>
 function CreateUpdateGallery(props) {
     const reduxGallery = useSelector(state => state.editGallery.gallery);
     const reduxDispatch = useDispatch();
-    const [state, dispatch] = useReducer(make_reducer(reduxGallery, reduxDispatch), initialState);
+    const [state, dispatch] = useReducer(make_reducer(reduxGallery), initialState);
 
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
@@ -120,13 +96,18 @@ function CreateUpdateGallery(props) {
                 axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
             ])
                 .then(axios.spread((wpRes, galleryRes) => {
-                    dispatch({ type: 'updatePageAndSetSelectedImages', payload: [wpRes.data, galleryRes.data.images]});
+                    dispatch({ type: 'updatePageAndSetSelectedFields', payload: [wpRes.data, galleryRes.data.images]});
+                    let newReduxGallery = galleryRes.data.images.map(img => ({url: img.img_url, caption: ""}));
+                    reduxDispatch({
+                        type: "EDIT_GALLERY",
+                        payload: [...newReduxGallery]
+                    });
                 }))
                 .catch(err => {
                     console.log(err);
                 });
         }
-    }, [props.match.path, props.match.params.id]);
+    }, [props.match.path, props.match.params.id, reduxDispatch]);
 
     useEffect(() => {
         axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}&orderby=date`)
@@ -140,15 +121,26 @@ function CreateUpdateGallery(props) {
     }, [page, perPage]);
 
     const removeSelectedImage = (clickedImgURL) => {
-        dispatch({ type: 'removeSelectedImage', payload: clickedImgURL });
+        dispatch({ type: 'toggleSelectedField', payload: clickedImgURL });
+        reduxDispatch({
+            type: "REMOVE_GALLERY_IMAGE",
+            payload: clickedImgURL
+        });
     }
 
     const handleImageClick = (clickedImg) => {
         if (clickedImg.selected) {
-            dispatch({ type: 'removeSelectedImage', payload: clickedImg.sourceURL });
+            removeSelectedImage(clickedImg.sourceURL);
         } 
         else {
-            dispatch({ type: 'addSelectedImage', payload: clickedImg.sourceURL });
+            dispatch({ type: 'toggleSelectedField', payload: clickedImg.sourceURL });
+            reduxDispatch({
+                type: "EDIT_GALLERY",
+                payload: [...reduxGallery, {
+                    url: clickedImg.sourceURL,
+                    caption: ""
+                }]
+            });
         }
     }
 
