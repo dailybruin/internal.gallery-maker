@@ -3,8 +3,7 @@ import axios from 'axios'
 import './CreateUpdateGallery.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
-import { useSelector } from 'react-redux'
-import { store } from '../../redux/configureStore'
+import { useSelector, useDispatch } from 'react-redux'
 
 const DEFAULT_PER_PAGE = 50;
 
@@ -23,11 +22,6 @@ function SelectedImage(props) {
             </span>
         </div>
     );
-}
-
-//retrieve redux state
-const selectReduxGallery = (state) => {
-    return state.editGallery.gallery;
 }
 
 //returns array of selected image urls from redux store
@@ -63,55 +57,55 @@ const setImageData = (imageData, selectedImages) => {
     );
 }
 
-const reducer = (state, action) => {
-    let newImageData, selectedImages;
-    let reduxDispatch = store.dispatch;
-    let reduxGallery = selectReduxGallery(store.getState());
+const make_reducer = (reduxGallery, reduxDispatch) => 
+    (state, action) => {
+        let newImageData, selectedImages;
 
-    switch (action.type) {
-        case 'updatePage':
-            selectedImages = reduxGallery.map(img => img.url);
-            newImageData = setImageData(action.payload, selectedImages);
-            return { ...state, imageData: newImageData }
+        switch (action.type) {
+            case 'updatePage':
+                selectedImages = reduxGallery.map(img => img.url);
+                newImageData = setImageData(action.payload, selectedImages);
+                return { ...state, imageData: newImageData }
 
-        case 'updatePageAndSetSelectedImages':
-            let [imageData, selectedImagesData] = action.payload;
-            selectedImages = selectedImagesData.map(img => img.img_url);
-            newImageData = setImageData(imageData, selectedImages);
-            let newReduxGallery = selectedImages.map(imgURL => ({url: imgURL, caption: ""}));
-            reduxDispatch({
-                type: "EDIT_GALLERY",
-                payload: [...reduxGallery, ...newReduxGallery]
-            });
-            return {...state, imageData: newImageData }
-         
-        case 'removeSelectedImage':
-            newImageData = toggleSelectedField(action.payload, state.imageData);
-            reduxDispatch({
-                type: "REMOVE_GALLERY_IMAGE",
-                payload: action.payload
-            })
-            return { ...state, imageData: newImageData }
+            case 'updatePageAndSetSelectedImages':
+                let [imageData, selectedImagesData] = action.payload;
+                selectedImages = selectedImagesData.map(img => img.img_url);
+                newImageData = setImageData(imageData, selectedImages);
+                let newReduxGallery = selectedImages.map(imgURL => ({url: imgURL, caption: ""}));
+                reduxDispatch({
+                    type: "EDIT_GALLERY",
+                    payload: [...reduxGallery, ...newReduxGallery]
+                });
+                return {...state, imageData: newImageData }
+            
+            case 'removeSelectedImage':
+                newImageData = toggleSelectedField(action.payload, state.imageData);
+                reduxDispatch({
+                    type: "REMOVE_GALLERY_IMAGE",
+                    payload: action.payload
+                })
+                return { ...state, imageData: newImageData }
 
-        case 'addSelectedImage':
-            newImageData = toggleSelectedField(action.payload, state.imageData);
-            reduxDispatch({
-                type: "EDIT_GALLERY",
-                payload: [...reduxGallery, {
-                    url: action.payload,
-                    caption: ""
-                }]
-            });
-            return { ...state, imageData: newImageData }
+            case 'addSelectedImage':
+                newImageData = toggleSelectedField(action.payload, state.imageData);
+                reduxDispatch({
+                    type: "EDIT_GALLERY",
+                    payload: [...reduxGallery, {
+                        url: action.payload,
+                        caption: ""
+                    }]
+                });
+                return { ...state, imageData: newImageData }
 
-        default:
-            return state;
+            default:
+                return state;
     }
 }
 
 function CreateUpdateGallery(props) {
-    const [state, dispatch] = useReducer(reducer, initialState);
     const reduxGallery = useSelector(state => state.editGallery.gallery);
+    const reduxDispatch = useDispatch();
+    const [state, dispatch] = useReducer(make_reducer(reduxGallery, reduxDispatch), initialState);
 
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
