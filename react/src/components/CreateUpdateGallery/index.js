@@ -64,27 +64,22 @@ const make_reducer = (reduxGallery, reduxDispatch) =>
 
         switch (action.type) {
             case 'updatePage':
-                console.log('updatePage action')
                 selectedImages = reduxGallery.map(img => img.url);
                 newImageData = setImageData(action.payload, selectedImages);
                 return { ...state, imageData: newImageData }
 
             case 'updatePageAndSetSelectedImages':
-                console.log('updatePageAndSetSelectedImages action')
                 let [imageData, selectedImagesData] = action.payload;
                 selectedImages = selectedImagesData.map(img => img.img_url);
                 newImageData = setImageData(imageData, selectedImages);
                 let newReduxGallery = selectedImages.map(imgURL => ({url: imgURL, caption: ""}));
-                console.log(reduxGallery)
-                console.log(newReduxGallery)
                 reduxDispatch({
                     type: "EDIT_GALLERY",
-                    payload: [...reduxGallery, ...newReduxGallery]
+                    payload: [...newReduxGallery]
                 });
                 return {...state, imageData: newImageData }
             
             case 'removeSelectedImage':
-                console.log('removeSelectedImage action')
                 newImageData = toggleSelectedField(action.payload, state.imageData);
                 reduxDispatch({
                     type: "REMOVE_GALLERY_IMAGE",
@@ -93,7 +88,6 @@ const make_reducer = (reduxGallery, reduxDispatch) =>
                 return { ...state, imageData: newImageData }
 
             case 'addSelectedImage':
-                console.log('addSelectedImage action')
                 newImageData = toggleSelectedField(action.payload, state.imageData);
                 reduxDispatch({
                     type: "EDIT_GALLERY",
@@ -126,8 +120,7 @@ function CreateUpdateGallery(props) {
                 axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
             ])
                 .then(axios.spread((wpRes, galleryRes) => {
-                    console.log('updatePageAndSetSelectedImages effect');
-                    dispatch( { type: 'updatePageAndSetSelectedImages', payload: [wpRes.data, galleryRes.data.images]} );
+                    dispatch({ type: 'updatePageAndSetSelectedImages', payload: [wpRes.data, galleryRes.data.images]});
                 }))
                 .catch(err => {
                     console.log(err);
@@ -138,7 +131,6 @@ function CreateUpdateGallery(props) {
     useEffect(() => {
         axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}&orderby=date`)
             .then(res => {
-                console.log('updatePage effect');
                 dispatch({ type: 'updatePage', payload: res.data });
                 setTotalPages(res.headers["x-wp-totalpages"]);
             })
