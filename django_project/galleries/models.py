@@ -27,8 +27,6 @@ class Gallery(models.Model):
     description = models.TextField(max_length=100, blank=True)
 
 
-
-
 class Image(models.Model):
     # image url
     img_url = models.URLField(max_length=200)
