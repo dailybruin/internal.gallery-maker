@@ -13,9 +13,10 @@ const GalleryList = () => {
     const [galleries, setGalleries] = useState([]);
 
     /* Initial load */
-    useEffect(() => {
+    const initialLoad = () => {
         updateGalleries(currPage, pageSize);
-    }, [currPage, pageSize]);
+    };
+    useEffect(initialLoad, []);
 
     /**
      * Retrieve galleries to be shown on current page
