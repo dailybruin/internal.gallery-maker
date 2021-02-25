@@ -12,10 +12,6 @@ import { Provider } from "react-redux";
 
 const { store, persistor } = configureStore();
 
-import { Provider } from 'react-redux'
-
-const {store, persistor} = configureStore()
-
 ReactDOM.render(
 	<Provider store={store}>
 		<PersistGate loading={null} persistor={persistor}>
