@@ -1,98 +1,70 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Table, Space } from "antd";
-import axios from "axios";
+import { Table, Space, Pagination, Button, Modal, notification } from "antd";
 
-import classes from "./gallery-list.module.css";
+import { APIListGalleries, APIDeleteGallery } from "api/galleries";
 
-const GalleryList = (props) => {
-    const [pageNo, setPageNo] = useState(1);
-    const [perPage, setPerPage] = useState(10);
-    const [totalPages, setTotalPages] = useState(1);
-    const [galleries, setGalleries] = useState([
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-        {
-            name: "hello",
-            descr: "first one",
-            id: 0,
-        },
-    ]);
+const { confirm } = Modal;
 
-    useEffect(() => {}, [pageNo, perPage]);
+const GalleryList = () => {
+    const [currPage, setCurrPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [galleries, setGalleries] = useState([]);
+
+    /* Initial load */
+    useEffect(() => {
+        updateGalleries(currPage, pageSize);
+    }, [currPage, pageSize]);
+
+    /**
+     * Retrieve galleries to be shown on current page
+     * @param {*} page - current page number
+     * @param {*} pageSize - galleries per page
+     */
+    const updateGalleries = async (page, pageSize) => {
+        const offset = (page - 1) * pageSize;
+        try {
+            const res = await APIListGalleries(pageSize, offset);
+            setCurrPage(page);
+            setPageSize(pageSize);
+            setTotal(res.data.count);
+            setGalleries(res.data.results);
+        } catch (err) {
+            notification.error({
+                message: "Failed to retrieve galleries from server.",
+                description: `${err.message}`,
+                duration: 0,
+            });
+        }
+    };
+
+    /**
+     * Show confirmation modal, then delete gallery
+     * @param {} id - id of gallery
+     */
+    const deleteGallery = async (id) => {
+        confirm({
+            title: "Are you sure you want to delete this gallery?",
+            content: "This gallery will be deleted permanently.",
+            async onOk() {
+                try {
+                    await APIDeleteGallery(id);
+                    updateGalleries(currPage, pageSize);
+                } catch (err) {
+                    notification.error({
+                        message: "Failed to delete gallery.",
+                        description: `${err.message}`,
+                    });
+                }
+            },
+        });
+    };
+
+    const getPageSizeOptions = () => {
+        const options = ["10", "20", "50", "100"];
+        return options.filter((option) => option <= total);
+    };
 
     const columns = [
         {
@@ -107,16 +79,22 @@ const GalleryList = (props) => {
         },
         {
             title: "Description",
-            dataIndex: "descr",
-            key: "descr",
+            dataIndex: "description",
+            key: "description",
         },
         {
             title: "Actions",
             key: "action",
-            render: (text, record) => (
+            render: (_, record) => (
                 <Space size="middle">
                     <Link to={`/update/${record.id}`}>Edit</Link>
-                    <a style={{ color: "red" }}>Delete</a>
+                    <Button
+                        type="link"
+                        style={{ color: "red" }}
+                        onClick={() => deleteGallery(record.id)}
+                    >
+                        Delete
+                    </Button>
                 </Space>
             ),
         },
@@ -127,11 +105,23 @@ const GalleryList = (props) => {
             <Table
                 dataSource={galleries}
                 columns={columns}
-                pagination={{
-                    showSizeChanger: true,
-                    showQuickJumper: true,
-                    pageSizeOptions: [10, 20, 50, 100],
+                rowKey="id"
+                pagination={false}
+            />
+            <Pagination
+                style={{
+                    marginTop: "1em",
                 }}
+                showSizeChanger
+                showQuickJumper
+                showTotal={(total, range) => {
+                    return `Showing galleries ${range[0]}-${range[1]} of ${total}`;
+                }}
+                pageSizeOptions={getPageSizeOptions()}
+                current={currPage}
+                total={total}
+                onChange={updateGalleries}
+                onShowSizeChange={updateGalleries}
             />
         </>
     );
