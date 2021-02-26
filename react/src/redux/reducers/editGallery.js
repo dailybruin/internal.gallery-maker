@@ -10,6 +10,12 @@ const editGallery = (state = initialState, action) => {
       	gallery: action.payload
       };
     }
+    case "REMOVE_GALLERY_IMAGE": {
+      let newGallery = state.gallery.filter(img => img.url !== action.payload);
+      return {
+        gallery: newGallery
+      }
+    }
     default: {
       return state;
     }
