@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { RearrangeImages } from '../RearrangeImages';
 
 function Home(props) {
   return (
@@ -12,7 +11,9 @@ function Home(props) {
       <div>
         <Link to="/update/1">Update</Link>
       </div>
-      <RearrangeImages />
+      <div>
+        <Link to="/rearrange">Rearrange Images</Link>
+      </div>
     </div>
   );
 }

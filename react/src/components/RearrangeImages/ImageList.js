@@ -26,7 +26,7 @@ const Image = ({ image, index, moveImage }) => {
   });
 
   const [{ isDragging }, drag] = useDrag({
-    item: { type, id: image.id, index },
+    item: { type, id: image.url, index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -41,7 +41,7 @@ const Image = ({ image, index, moveImage }) => {
       style={{ opacity: isDragging ? 0 : 1 }}
       className="file-item"
     >
-      <img alt={`img - ${image.id}`} src={image.url} className="file-img" />
+      <img alt={`img - ${image.url}`} src={image.url} className="file-img" />
     </div>
   );
 };
@@ -52,7 +52,7 @@ const ImageList = ({ images, moveImage }) => {
       <Image
         image={image}
         index={index}
-        key={`${image.id}-image`}
+        key={`${image.url}-image`}
         moveImage={moveImage}
       />
     );
