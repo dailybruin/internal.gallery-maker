@@ -3,6 +3,8 @@ import axios from 'axios'
 import './CreateUpdateGallery.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { useSelector, useDispatch } from 'react-redux'
+import { SERVER_URL } from '../../server_url';
 
 const DEFAULT_PER_PAGE = 50;
 
@@ -23,8 +25,13 @@ function SelectedImage(props) {
     );
 }
 
+//returns array of selected image urls from redux state
+const selectSelectedImages = (state) => {
+    return state.map((el) => el.url);
+}
+
 /*
-state for displayed image data and selected images is handled by reducer.
+state for displayed image data is handled by reducer.
 necessary because the effect which makes a GET request to the WP endpoint
 previously used the selected images state to determine if any of the fetched
 images had already been selected by the user. However, this meant that the 
@@ -34,15 +41,9 @@ an image, which we don't want. To ensure the effect isn't dependent on the selec
 images state, I had to move the state update logic for selected images and image data
 to a reducer.
 */
-const initialState = { imageData: [], selectedImages: [] }
+const initialState = { imageData: [] }
 
-function toggleSelectedField(imgURL, imageData) {
-    return imageData.map(
-        img => img.sourceURL === imgURL ? {...img, selected: !img.selected} : img
-    )
-}
-
-function setImageData(imageData, selectedImages) {
+const setImageData = (imageData, selectedImages) => {
     return imageData.map(img => 
         ({
             sourceURL: img.source_url,
@@ -51,36 +52,37 @@ function setImageData(imageData, selectedImages) {
     );
 }
 
-function reducer(state, action) {
-    let newImageData, newSelectedImages;
-    switch (action.type) {
-        case 'updatePage':
-            newImageData = setImageData(action.payload, state.selectedImages);
-            return { ...state, imageData: newImageData }
+const make_reducer = (reduxGallery) => 
+    (state, action) => {
+        let newImageData, selectedImages;
 
-        case 'updatePageAndSetSelectedImages':
-            let [imageData, selectedImagesData] = action.payload;
-            newSelectedImages = selectedImagesData.map(img => img.img_url);
-            newImageData = setImageData(imageData, newSelectedImages);
-            return {...state, imageData: newImageData, selectedImages: newSelectedImages}
-         
-        case 'removeSelectedImage':
-            newImageData = toggleSelectedField(action.payload, state.imageData);
-            newSelectedImages = state.selectedImages.filter(imgURL => imgURL !== action.payload);
-            return { ...state, imageData: newImageData, selectedImages: newSelectedImages }
+        switch (action.type) {
+            case 'updatePage':
+                selectedImages = reduxGallery.map(img => img.url);
+                newImageData = setImageData(action.payload, selectedImages);
+                return { ...state, imageData: newImageData }
 
-        case 'addSelectedImage':
-            newImageData = toggleSelectedField(action.payload, state.imageData);
-            newSelectedImages = [...state.selectedImages, action.payload]
-            return { ...state, imageData: newImageData, selectedImages: newSelectedImages }
+            case 'updatePageAndSetSelectedFields':
+                let [imageData, selectedImagesData] = action.payload;
+                selectedImages = selectedImagesData.map(img => img.img_url);
+                newImageData = setImageData(imageData, selectedImages);
+                return {...state, imageData: newImageData }
+            
+            case 'toggleSelectedField':
+                newImageData = state.imageData.map(
+                    img => img.sourceURL === action.payload ? {...img, selected: !img.selected} : img
+                );
+                return { ...state, imageData: newImageData }
 
-        default:
-            return state;
+            default:
+                return state;
     }
 }
 
 function CreateUpdateGallery(props) {
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const reduxGallery = useSelector(state => state.editGallery.gallery);
+    const reduxDispatch = useDispatch();
+    const [state, dispatch] = useReducer(make_reducer(reduxGallery), initialState);
 
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
@@ -90,20 +92,25 @@ function CreateUpdateGallery(props) {
     useEffect(() => {
         if (props.match.path === '/update/:id') {
             axios.all([
-                axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=1&per_page=${DEFAULT_PER_PAGE}`),
-                axios.get(`https://gallery.dailybruin.com/django/gallery/${props.match.params.id}`)
+                axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=1&per_page=${DEFAULT_PER_PAGE}&orderby=date`),
+                axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
             ])
                 .then(axios.spread((wpRes, galleryRes) => {
-                    dispatch( { type: 'updatePageAndSetSelectedImages', payload: [wpRes.data, galleryRes.data.images]} );
+                    dispatch({ type: 'updatePageAndSetSelectedFields', payload: [wpRes.data, galleryRes.data.images]});
+                    let newReduxGallery = galleryRes.data.images.map(img => ({url: img.img_url, caption: ""}));
+                    reduxDispatch({
+                        type: "EDIT_GALLERY",
+                        payload: [...newReduxGallery]
+                    });
                 }))
                 .catch(err => {
                     console.log(err);
                 });
         }
-    }, [props.match.path, props.match.params.id]);
+    }, [props.match.path, props.match.params.id, reduxDispatch]);
 
     useEffect(() => {
-        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}`)
+        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${perPage}&orderby=date`)
             .then(res => {
                 dispatch({ type: 'updatePage', payload: res.data });
                 setTotalPages(res.headers["x-wp-totalpages"]);
@@ -114,15 +121,26 @@ function CreateUpdateGallery(props) {
     }, [page, perPage]);
 
     const removeSelectedImage = (clickedImgURL) => {
-        dispatch({ type: 'removeSelectedImage', payload: clickedImgURL });
+        dispatch({ type: 'toggleSelectedField', payload: clickedImgURL });
+        reduxDispatch({
+            type: "REMOVE_GALLERY_IMAGE",
+            payload: clickedImgURL
+        });
     }
 
     const handleImageClick = (clickedImg) => {
         if (clickedImg.selected) {
-            dispatch({ type: 'removeSelectedImage', payload: clickedImg.sourceURL });
+            removeSelectedImage(clickedImg.sourceURL);
         } 
         else {
-            dispatch({ type: 'addSelectedImage', payload: clickedImg.sourceURL });
+            dispatch({ type: 'toggleSelectedField', payload: clickedImg.sourceURL });
+            reduxDispatch({
+                type: "EDIT_GALLERY",
+                payload: [...reduxGallery, {
+                    url: clickedImg.sourceURL,
+                    caption: ""
+                }]
+            });
         }
     }
 
@@ -163,76 +181,82 @@ function CreateUpdateGallery(props) {
             </div>
             <div>
                 <div className="columns">
-                    <div>
-                        <div className="img-grid">
-                            {
-                                state.imageData.map(img => 
-                                    <img src={img.sourceURL} 
-                                        alt=""
-                                        className={img.selected ? "img-selected" : ""}
-                                        onClick={() => handleImageClick(img)}
-                                        key={img.sourceURL}
+                    <div className="img-grid">
+                        <p>
+                            Select images to put in the gallery (don't worry about order now; you can reorder them later!)
+                        </p>
+                        {
+                            state.imageData.map(img => 
+                                <img src={img.sourceURL} 
+                                    alt=""
+                                    className={img.selected ? "img-selected" : ""}
+                                    onClick={() => handleImageClick(img)}
+                                    key={img.sourceURL}
+                                />
+                            )
+                        }
+                    </div>
+                    <div className="pagination-container">
+                        <button 
+                            className="pag-button"
+                            onClick={() => setNextPage(-1)}
+                        >
+                            Previous
+                        </button>
+                        <div className="pag-input-container">
+                            <form className="pag-input" onSubmit={handlePageSubmit}>
+                                <label>
+                                    Page 
+                                    <input 
+                                        type="number" 
+                                        min="1" 
+                                        max={totalPages}
+                                        value={pageInput}
+                                        onChange={e => setPageInput(e.target.value)}
                                     />
-                                )
-                            }
+                                </label>
+                            </form>
+                            <form className="pag-input">
+                                <label>
+                                    Images Per Page 
+                                    <select 
+                                        value={perPage} 
+                                        onChange={handlePerPageChange} 
+                                        id="perPage"
+                                    >
+                                        <option value="10">10</option>
+                                        <option value="25">20</option>
+                                        <option value="50">50</option>
+                                        <option value="75">75</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                </label>
+                            </form>
                         </div>
-                        <div className="pagination">
-                            <button 
-                                className="pag-button"
-                                onClick={() => setNextPage(-1)}
-                            >
-                                Previous
-                            </button>
-                            <div className="pag-input">
-                                <form onSubmit={handlePageSubmit}>
-                                    <label>
-                                        Page 
-                                        <input 
-                                            type="number" 
-                                            min="1" 
-                                            max={totalPages}
-                                            value={pageInput}
-                                            onChange={e => setPageInput(e.target.value)}
-                                        />
-                                    </label>
-                                </form>
-                                <form>
-                                    <label>
-                                        Images Per Page 
-                                        <select 
-                                            value={perPage} 
-                                            onChange={handlePerPageChange} 
-                                            id="perPage"
-                                        >
-                                            <option value="10">10</option>
-                                            <option value="25">20</option>
-                                            <option value="50">50</option>
-                                            <option value="75">75</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                    </label>
-                                </form>
-                            </div>
-                            <button 
-                                className="pag-button"
-                                onClick={() => setNextPage(1)}
-                            >
-                                    Next
-                            </button>
-                        </div>
+                        <button 
+                            className="pag-button"
+                            onClick={() => setNextPage(1)}
+                        >
+                                Next
+                        </button>
                     </div>
                     <div className="selected-imgs">
                         {
-                            state.selectedImages.length > 0 ?
-                                state.selectedImages.map(imgURL => 
-                                    <SelectedImage
-                                        sourceURL={imgURL}
-                                        onRemoveClick={removeSelectedImage}
-                                        key={imgURL}
-                                    />
-                                )
+                            selectSelectedImages(reduxGallery).length > 0 ?
+                                <div>
+                                    <p>{`Selected images: ${selectSelectedImages(reduxGallery).length}`}</p>
+                                    {
+                                        selectSelectedImages(reduxGallery).map(imgURL => 
+                                            <SelectedImage
+                                                sourceURL={imgURL}
+                                                onRemoveClick={removeSelectedImage}
+                                                key={imgURL}
+                                            />
+                                        )
+                                    }   
+                                </div>
                             :
-                                <div>Selected images will appear here</div>
+                                <p>Selected images will appear here</p>
                         }
                     </div>
                 </div>
