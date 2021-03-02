@@ -1,13 +1,17 @@
-
 const initialState = {
-	gallery: []
+  gallery: [],
 };
 
 const editGallery = (state = initialState, action) => {
   switch (action.type) {
-    case "EDIT_GALLERY": {
+    case 'EDIT_GALLERY': {
       return {
-      	gallery: action.payload
+        gallery: action.payload,
+      };
+    }
+    case 'DELETE_GALLERY': {
+      return {
+        gallery: [],
       };
     }
     case "REMOVE_GALLERY_IMAGE": {
