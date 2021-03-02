@@ -28,15 +28,8 @@ def slack_auth(request):
         'redirect_uri':'http://localhost:8000/django/oauth/slack_auth' 
         } 
     # sending post request and saving response as response object 
-    r = "Checking"
     try:
         r = requests.post(url = API_ENDPOINT, data = data) 
-    except:
-        return JsonResponse({
-            "error": "error communicating with POST request for auth token"
-        }, safe=False)
-    finally:
-        print(type(r))
         
         # logging.debug("Request Body", r.request.body)
         # logging.debug("Request", r.request)
@@ -52,46 +45,45 @@ def slack_auth(request):
         }
         API_ENDPOINT = "https://slack.com/api/users.identity"
         r2 = "trying a request"
-        try:
-            r2 = requests.post(url = API_ENDPOINT, data = data) 
-        except:
+        r2 = requests.post(url = API_ENDPOINT, data = data) 
+
+
+        finding_name = json.loads(r2.text)
+        name = finding_name["user"]["name"]
+        # print(name)
+        # logging.debug('userId', userId)
+        if loggedIn:
+            userId = str(userId)
+            user = authenticate(username=userId,password='', first_name=name)
+            # logging.debug('Request', request)
+            # logging.debug('user', user)
+            instance = User.objects.all()
+            # logging.debug('instance', instance)
+            # sessions = Session.objects.all()
+            # sessions.delete()
+            # instance.delete()
+            if user is not None:
+                # The user already exists in the database
+                login(request, user)
+                # print(user)
+                return redirect('/')
+            else:
+                # A new user needs to be made
+                new_user = User.objects.create_user(username=userId, password='', first_name=name)
+                new_user.is_active = True
+                new_user.save()
+                new_user = authenticate(username=userId, password='',first_name=name)
+                login(request, new_user)
+                # return HttpResponse("Success after making a new user")
+                return redirect('/')
+        if not loggedIn:
             return JsonResponse({
-            "error": "error communicating with POST request for username"
-        }, safe=False)
-        finally:
-            finding_name = json.loads(r2.text)
-            name = finding_name["user"]["name"]
-            # print(name)
-            # logging.debug('userId', userId)
-            if loggedIn:
-                userId = str(userId)
-                user = authenticate(username=userId,password='', first_name=name)
-                # logging.debug('Request', request)
-                # logging.debug('user', user)
-                instance = User.objects.all()
-                # logging.debug('instance', instance)
-                # sessions = Session.objects.all()
-                # sessions.delete()
-                # instance.delete()
-                if user is not None:
-                    # The user already exists in the database
-                    
-                    login(request, user)
-                    # print(user)
-                    return redirect('/')
-                else:
-                    # A new user needs to be made
-                    new_user = User.objects.create_user(username=userId, password='', first_name=name)
-                    new_user.is_active = True
-                    new_user.save()
-                    new_user = authenticate(username=userId, password='',first_name=name)
-                    login(request, new_user)
-                    # return HttpResponse("Success after making a new user")
-                    return redirect('/')
-            if not loggedIn:
-                return JsonResponse({
-                    "error": "error communicating with Slack API"
-                }, safe=False)
+                "error": "error communicating with Slack API"
+            }, safe=False)
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({
+                "error": "error communicating with POST/GET requests"
+            }, safe=False)
 
 def get_logged_in(request):
     # logging.debug("request.user authenticate", request.user.is_authenticated)
@@ -102,7 +94,12 @@ def get_logged_in(request):
     # instance.delete()
     # logging.debug('instance', instance)
     if request.user.is_authenticated:
-        # logout(request)
-        return HttpResponse(True)
+        name = request.user.first_name
+        return JsonResponse({
+                "name" : name,
+                "ok": "True"
+            }, safe=True)
     else:
-        return HttpResponse(False)
+        return JsonResponse({
+                "ok": "False"
+            }, safe=False)
