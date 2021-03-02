@@ -4,6 +4,8 @@ import { Switch, Route } from 'react-router-dom';
 import Home from './Home';
 import CreateUpdateGallery from './CreateUpdateGallery';
 import Signup from './Signup';
+import { RearrangeImages } from './RearrangeImages';
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(true);
@@ -37,6 +39,7 @@ function App() {
           path="/"
           render={() => <Home isLoggedIn={loggedIn} isLoading={isLoading} />}
         />
+        <Route path="/rearrange" component={RearrangeImages} />
       </Switch>
     </div>
   );
