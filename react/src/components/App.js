@@ -15,9 +15,10 @@ function App() {
       'http://localhost:8000/django/oauth/get_logged_in'
     );
     // console.log('response', response);
-    const text = await response.text();
-    // console.log('response text', text);
-    if (text == 'True') {
+    let text = await response.text();
+    text = JSON.parse(text);
+    console.log('response text', text["ok"]);
+    if (text["ok"]) {
       setLoggedIn(true);
       setLoading(false);
       console.log('set to true');
