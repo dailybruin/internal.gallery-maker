@@ -1,0 +1,95 @@
+.columns {
+    display: flex;
+}
+
+.img-grid {
+    flex-grow: 1;
+    margin-bottom: 7em;
+}
+
+.img-grid img {
+    border: 7px solid transparent;
+    margin: 3px;
+    cursor: pointer;
+    height: 200px;
+    width: auto;
+}
+
+.img-grid .img-selected {
+    border: 7px solid blue;
+}
+
+.selected-imgs {
+    background-color: lightgrey;
+    flex: 0 0 200px;
+    height: 97vh;
+    position: sticky;
+    top: 0;
+    right: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /*Firefox*/
+    scrollbar-width: thin;
+    scrollbar-color: dimgray darkgrey;
+}
+
+    /*Most browsers except Firefox and IE*/
+    .selected-imgs::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+    .selected-imgs::-webkit-scrollbar-track {
+    background: darkgray;
+    }
+
+    .selected-imgs::-webkit-scrollbar-thumb {
+    background: dimgrey;
+    }
+  
+  .selected-img-container {
+      position: relative;
+      display: inline-block;
+      font-size: 1.75em;
+      margin: 5px 0;
+  }
+
+  .selected-img-container img {
+      width: 85%;
+      height: auto;
+  }
+
+  .selected-img-container:first-child {
+      margin-top: 15px;
+  }
+
+  .button-overlay {
+    position: absolute;
+    top: -7.5%;
+    right: -1%;
+    cursor: pointer;
+  }
+
+  .pagination-container {
+      position: fixed;
+      bottom: 0;
+      display: flex;
+      justify-content: space-around;
+      width: calc(97vw - 200px);
+      background-color: white;
+      padding: 1em 0;
+  }
+
+  .pag-button {
+      flex: 1;
+  }
+
+  .pag-input-container {
+      flex: 2;
+      display: flex;
+      justify-content: space-around;
+  }
+
+  .pag-input {
+      margin: 0 1em;
+  }

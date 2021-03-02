@@ -14,10 +14,8 @@ class Gallery(models.Model):
     NOTALT = 'notalt'
 
     POSSIBLE_VIEW_CHOICES = [
-
-    (ALT, 'alternating'),
-    (NOTALT, 'not-alternating')
-
+        (ALT, 'alternating'),
+        (NOTALT, 'not-alternating')
     ]
 
     layout = models.CharField(
@@ -25,8 +23,8 @@ class Gallery(models.Model):
         choices=POSSIBLE_VIEW_CHOICES,
         default = ALT
     )
-
-
+    name = models.CharField(max_length=100)
+    description = models.TextField(max_length=100, blank=True)
 
 
 class Image(models.Model):
