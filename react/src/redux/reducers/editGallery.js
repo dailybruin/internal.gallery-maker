@@ -14,11 +14,17 @@ const editGallery = (state = initialState, action) => {
         gallery: [],
       };
     }
-    case "REMOVE_GALLERY_IMAGE": {
-      let newGallery = state.gallery.filter(img => img.url !== action.payload);
+    case 'REMOVE_GALLERY_IMAGE': {
+      let newGallery = state.gallery.filter(
+        (img) => img.url !== action.payload
+      );
       return {
-        gallery: newGallery
-      }
+        gallery: newGallery,
+      };
+    }
+    case 'SUBMIT_GALLERY': {
+      //call backend here
+      return state;
     }
     default: {
       return state;
