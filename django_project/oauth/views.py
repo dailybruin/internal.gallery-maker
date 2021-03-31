@@ -57,7 +57,7 @@ def slack_auth(request):
             user = authenticate(username=userId,password='', first_name=name)
             # logging.debug('Request', request)
             # logging.debug('user', user)
-            instance = User.objects.all()
+            # instance = User.objects.all()
             # logging.debug('instance', instance)
             # sessions = Session.objects.all()
             # sessions.delete()
@@ -88,9 +88,9 @@ def slack_auth(request):
 def get_logged_in(request):
     # logging.debug("request.user authenticate", request.user.is_authenticated)
     # logging.debug('request.user', request.user)
-    sessions = Session.objects.all()
+    # sessions = Session.objects.all()
     # logging.debug('sessions', sessions )
-    instance = User.objects.all()
+    # instance = User.objects.all()
     # instance.delete()
     # logging.debug('instance', instance)
     if request.user.is_authenticated:

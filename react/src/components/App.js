@@ -35,11 +35,12 @@ function App() {
         <Route path="/create" component={CreateUpdateGallery} />
         <Route path="/update/:id" component={CreateUpdateGallery} />
         <Route path="/signup" component={Signup} />
+        <Route path="/rearrange" component={RearrangeImages} />
         <Route
           path="/"
           render={() => <Home isLoggedIn={loggedIn} isLoading={isLoading} />}
         />
-        <Route path="/rearrange" component={RearrangeImages} />
+        
       </Switch>
     </div>
   );
