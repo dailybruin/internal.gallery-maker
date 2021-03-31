@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useReducer } from 'react'
 import axios from 'axios'
 import './CreateUpdateGallery.css'
@@ -265,4 +266,4 @@ function CreateUpdateGallery(props) {
     );
 }
 
-export default CreateUpdateGallery
+export default CreateUpdateGallery;
