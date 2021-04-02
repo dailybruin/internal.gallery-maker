@@ -18,7 +18,7 @@ class GallerySerializer(serializers.ModelSerializer):
 class MainSiteImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ['img_url', 'description', 'credits',]
+        fields = ['img_url', 'description', 'credits', 'type']
 
 class MainSiteGallerySerializer(serializers.ModelSerializer):
     def get_images_as_data(self, obj):

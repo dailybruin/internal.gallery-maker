@@ -1,0 +1,13 @@
+.slack-link-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.signup-container {
+  background-color: mediumpurple;
+  width: 100vw;
+  height: 100vh;
+}

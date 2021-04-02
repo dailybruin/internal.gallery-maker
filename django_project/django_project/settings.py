@@ -30,6 +30,8 @@ if os.environ.get('SECRET_KEY'):
     SECRET_KEY = os.environ.get('SECRET_KEY')
 else:
     SECRET_KEY = '_i@@y#sw+z^q1+xk2wbr2$cz1$-ll44(!f74lce!e$qkw$i(dg'
+SLACK_SECRET_KEY = os.environ.get('SLACK_SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
@@ -67,7 +69,8 @@ INSTALLED_APPS = [
     'rest_framework', # REST API Utils
 
     'utils',
-    'galleries'
+    'galleries',
+    'oauth'
 ]
 
 MIDDLEWARE = [

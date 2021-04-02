@@ -41,6 +41,20 @@ class Image(models.Model):
     # foregin key
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="images")
 
+    # type of image (center, alternating)
+    CENTER_PHOTO= 'center-photo'
+    ALT_PHOTO = 'alt-photo'
+
+    POSSIBLE_TYPE_CHOICES = [
+        (CENTER_PHOTO, CENTER_PHOTO),
+        (ALT_PHOTO, ALT_PHOTO)
+    ]
+    type = models.CharField(
+        max_length=12,
+        choices=POSSIBLE_TYPE_CHOICES,
+        default = ALT_PHOTO
+    )
+
     class Meta:
         ordering = ['index']
 
