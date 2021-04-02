@@ -20,7 +20,7 @@ function Home(props) {
         <Link to="/rearrange">Rearrange Images</Link>
       </div>
       {/* <div>
-        <SubmitButton id={74} /> //add id when updating, if creating ignore
+        <SubmitButton /> add id when updating, if creating ignore
       </div> */}
     </div>
   );
