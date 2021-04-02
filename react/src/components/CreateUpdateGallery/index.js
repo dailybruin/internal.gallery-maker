@@ -1,20 +1,43 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
-import { Steps, Button } from "antd";
-import './CreateUpdateGallery.css'
+import { Steps, Button, notification} from "antd";
+import { useDispatch } from 'react-redux';
+import './CreateUpdateGallery.css';
+import { SERVER_URL } from '../../server_url';
+import axios from 'axios';
 
 const TOTAL_STEPS = 3;
 const { Step } = Steps;
 
 function CreateUpdateGallery(props) {
     const [curStep, setCurStep] = useState(0); // step 0 == select images, 1 == add captions, 2 == rearrange images
+    const reduxDispatch = useDispatch();
+
+    useEffect(() => {
+        if (props.match.path === '/update/:id') {
+            axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
+                .then(res => {
+                    let reduxGallery = res.data.images.map(img => ({url: img.img_url, caption: ""}));
+                    reduxDispatch({
+                        type: "EDIT_GALLERY",
+                        payload: [...reduxGallery]
+                    });
+                })
+                .catch(err => {
+                    notification.error({
+                        message: "Failed to retrieve galleries from server.",
+                        description: `${err.message}`,
+                        duration: 0,
+                    });
+                });
+        }
+    }, [props.match.path, props.match.params.id, reduxDispatch]);
 
     function renderStep(step) {
-        let updateID = props.match.path === '/update/:id' ? props.match.params.id : -1;
         switch (step) {
             case 0:
-                return <SelectImages updateID={updateID}/>
+                return <SelectImages/>
             case 1:
                 return <h3>Add captions</h3>
             case 2:
@@ -22,7 +45,6 @@ function CreateUpdateGallery(props) {
             default:
                 return null;
         }
-    
     }
 
     const next = () => {

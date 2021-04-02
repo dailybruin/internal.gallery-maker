@@ -2,7 +2,6 @@ import React, { useState, useEffect, useReducer } from 'react'
 import axios from 'axios'
 import './SelectImages.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { SERVER_URL } from '../../server_url';
 import { Pagination, notification } from "antd";
 import { CloseCircleTwoTone } from '@ant-design/icons';
 
@@ -32,13 +31,12 @@ const selectSelectedImages = (state) => {
 /*
 state for displayed image data is handled by reducer.
 necessary because the effect which makes a GET request to the WP endpoint
-previously used the selected images state to determine if any of the fetched
+previously used the gallery state to determine if any of the fetched
 images had already been selected by the user. However, this meant that the 
-effect was dependent on the selected images state, so it ran every time a user 
+effect was dependent on that state, so it ran every time a user 
 selected an image. This means the GET request was made every time the user selected
-an image, which we don't want. To ensure the effect isn't dependent on the selected 
-images state, I had to move the state update logic for selected images and image data
-to a reducer.
+an image, which we don't want. To ensure the effect isn't dependent on the gallery 
+state, I had to move the state update logic for displayed image data to a reducer.
 */
 const initialState = { imageData: [] }
 
@@ -60,12 +58,6 @@ const make_reducer = (reduxGallery) =>
                 selectedImages = reduxGallery.map(img => img.url);
                 newImageData = setImageData(action.payload, selectedImages);
                 return { ...state, imageData: newImageData }
-
-            case 'updatePageAndSetSelectedFields':
-                let [imageData, selectedImagesData] = action.payload;
-                selectedImages = selectedImagesData.map(img => img.img_url);
-                newImageData = setImageData(imageData, selectedImages);
-                return {...state, imageData: newImageData }
             
             case 'toggleSelectedField':
                 newImageData = state.imageData.map(
@@ -86,30 +78,6 @@ function SelectImages(props) {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(DEFAULT_PER_PAGE);
     const [totalItems, setTotalItems] = useState(0);
-
-    useEffect(() => {
-        if (props.updateID >= 0) {
-            axios.all([
-                axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=1&per_page=${DEFAULT_PER_PAGE}&orderby=date`),
-                axios.get(`${SERVER_URL}/django/gallery/${props.updateID}`)
-            ])
-                .then(axios.spread((wpRes, galleryRes) => {
-                    dispatch({ type: 'updatePageAndSetSelectedFields', payload: [wpRes.data, galleryRes.data.images]});
-                    let newReduxGallery = galleryRes.data.images.map(img => ({url: img.img_url, caption: ""}));
-                    reduxDispatch({
-                        type: "EDIT_GALLERY",
-                        payload: [...newReduxGallery]
-                    });
-                }))
-                .catch(err => {
-                    notification.error({
-                        message: "Failed to retrieve data.",
-                        description: `${err.message}`,
-                        duration: 0,
-                    });
-                });
-        }
-    }, [props.updateID, reduxDispatch]);
 
     useEffect(() => {
         axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${pageSize}&orderby=date`)
