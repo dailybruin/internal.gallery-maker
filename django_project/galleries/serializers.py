@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import Gallery, Image
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -21,12 +22,18 @@ class MainSiteImageSerializer(serializers.ModelSerializer):
         fields = ['img_url', 'description', 'credits', 'type']
 
 class MainSiteGallerySerializer(serializers.ModelSerializer):
+    
+
+    data = serializers.SerializerMethodField('get_images_as_data')
+    layout = serializers.SerializerMethodField()
+
     def get_images_as_data(self, obj):
         return MainSiteImageSerializer(obj.images.all(), many=True).data
 
-    data = serializers.SerializerMethodField('get_images_as_data')
+    def get_layout(self,obj):
+        return obj.get_layout_display()
 
     class Meta:
         model = Gallery
-        fields = ['layout', 'data']
+        fields = ['data', 'layout']
 
