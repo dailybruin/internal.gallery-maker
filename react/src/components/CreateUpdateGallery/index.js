@@ -16,7 +16,7 @@ function CreateUpdateGallery(props) {
             case 0:
                 return <SelectImages updateID={updateID}/>
             case 1:
-                return <div>Add captions</div>
+                return <h3>Add captions</h3>
             case 2:
                 return <RearrangeImages/>
             default:
@@ -35,9 +35,6 @@ function CreateUpdateGallery(props) {
 
     return (
         <div>
-            <div>
-                {props.match.path === '/update/:id' ? `update ${props.match.params.id}` : "create"}
-            </div>
             { renderStep(curStep) }
             <div className="steps-nav-container">
                 <Steps 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useReducer } from 'react'
 import axios from 'axios'
 import './SelectImages.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimesCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { SERVER_URL } from '../../server_url';
 import { Pagination, notification } from "antd";
+import { CloseCircleTwoTone } from '@ant-design/icons';
 
 const DEFAULT_PER_PAGE = 50;
 
@@ -16,11 +15,10 @@ function SelectedImage(props) {
                 alt=""
             />
             <span 
-                className="fa-layers fa-fw button-overlay"
+                className="button-overlay"
                 onClick={() => {props.onRemoveClick(props.sourceURL)}}
             >
-                <FontAwesomeIcon icon={faCircle} color="white" />
-                <FontAwesomeIcon icon={faTimesCircle} />
+                <CloseCircleTwoTone twoToneColor="tomato" /> 
             </span>
         </div>
     );
@@ -172,9 +170,9 @@ function SelectImages(props) {
         <div>
             <div className="columns">
                 <div className="img-grid">
-                    <p>
+                    <h3>
                         Select images to put in the gallery (don't worry about order now; you can reorder them later!)
-                    </p>
+                    </h3>
                     {
                         state.imageData.map(img => 
                             <img src={img.sourceURL} 

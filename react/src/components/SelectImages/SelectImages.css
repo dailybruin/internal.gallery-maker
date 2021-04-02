@@ -65,8 +65,8 @@
 
   .button-overlay {
     position: absolute;
-    top: -7.5%;
-    right: -1%;
+    top: -15px;
+    right: 5px;
     cursor: pointer;
   }
 
