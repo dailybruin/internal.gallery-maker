@@ -4,6 +4,7 @@ import { Button } from 'antd';
 
 import classes from './index.module.css';
 import GalleryList from './gallery-list';
+import SubmitButton from '../SubmitButton';
 
 function Home(props) {
   return (
@@ -17,6 +18,9 @@ function Home(props) {
       </Button>
       <div>
         <Link to="/rearrange">Rearrange Images</Link>
+      </div>
+      <div>
+        <SubmitButton id={74} />
       </div>
     </div>
   );

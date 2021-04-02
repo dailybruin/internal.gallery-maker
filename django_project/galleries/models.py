@@ -38,7 +38,7 @@ class Image(models.Model):
     # specify order of imgs
     index = models.IntegerField()
 
-    # foregin key
+    # foreign key
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="images")
 
     class Meta:
