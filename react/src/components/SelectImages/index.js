@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTimesCircle, faCircle } from '@fortawesome/free-solid-svg-icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { SERVER_URL } from '../../server_url';
-import { Pagination } from "antd";
+import { Pagination, notification } from "antd";
 
 const DEFAULT_PER_PAGE = 50;
 
@@ -104,7 +104,11 @@ function SelectImages(props) {
                     });
                 }))
                 .catch(err => {
-                    console.log(err);
+                    notification.error({
+                        message: "Failed to retrieve data.",
+                        description: `${err.message}`,
+                        duration: 0,
+                    });
                 });
         }
     }, [props.updateID, reduxDispatch]);
@@ -116,7 +120,11 @@ function SelectImages(props) {
                 setTotalItems(res.headers["x-wp-total"]);
             })
             .catch(err => {
-                console.log(err);
+                notification.error({
+                    message: "Failed to retrieve images from WordPress.",
+                    description: `${err.message}`,
+                    duration: 0,
+                });
             });
     }, [page, pageSize]);
 

@@ -73,7 +73,7 @@
   .pagination-container {
       position: fixed;
       bottom: 56px;
-      width: calc(100vw - 220px);
+      width: calc(100vw - 231px);
       background-color: white;
       padding: 1em 0;
   }

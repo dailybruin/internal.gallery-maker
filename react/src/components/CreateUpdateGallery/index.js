@@ -4,6 +4,7 @@ import { RearrangeImages } from '../RearrangeImages';
 import { Steps, Button } from "antd";
 import './CreateUpdateGallery.css'
 
+const TOTAL_STEPS = 3;
 const { Step } = Steps;
 
 function CreateUpdateGallery(props) {
@@ -48,18 +49,21 @@ function CreateUpdateGallery(props) {
                     <Step title="Rearrange images"/>
                 </Steps>
                 <div>
-                    {curStep > 0 && 
+                    {curStep > 0 ? 
                         <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
                             Previous
                         </Button>
+                        :
+                        <Button style={{ margin: '0 8px' }} disabled>
+                            Previous
+                        </Button>
                     }
-                    {curStep < 2 && 
+                    {curStep < TOTAL_STEPS - 1 ? 
                         <Button type="primary" onClick={() => next()}>
                             Next
                         </Button>
-                    }
-                    {curStep === 2 && 
-                        <Button type="primary" onClick={console.log("cool")}>
+                        :
+                        <Button type="primary" onClick={() => console.log("ADD SUBMIT BUTTON HERE")}>
                             Done
                         </Button>
                     }
