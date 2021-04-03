@@ -18,7 +18,7 @@ function CreateUpdateGallery(props) {
         if (props.match.path === '/update/:id') {
             axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
                 .then(res => {
-                    let reduxGallery = res.data.images.map(img => ({url: img.img_url, caption: ""}));
+                    let reduxGallery = res.data.images.map(img => ({url: img.img_url, caption: img.description}));
                     reduxDispatch({
                         type: "EDIT_GALLERY",
                         payload: [...reduxGallery]
