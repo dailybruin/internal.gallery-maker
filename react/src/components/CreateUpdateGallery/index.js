@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
+import CaptionsForm from "../CaptionForm";
+
 import { Steps, Button, notification} from "antd";
 import { useDispatch } from 'react-redux';
 import './CreateUpdateGallery.css';
@@ -39,7 +41,8 @@ function CreateUpdateGallery(props) {
             case 0:
                 return <SelectImages/>
             case 1:
-                return <h3>Add captions</h3>
+                return <CaptionsForm/>
+
             case 2:
                 return <RearrangeImages/>
             default:
