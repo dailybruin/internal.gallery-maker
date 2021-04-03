@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+
 import { Button } from 'antd';
 
 import classes from './index.module.css';
@@ -7,7 +8,7 @@ import GalleryList from './gallery-list';
 import SubmitButton from '../SubmitButton';
 
 function Home(props) {
-  return (
+  return props.isLoggedIn ? (
     <div>
       <h1>Galleries</h1>
       <div className={classes.Container}>
@@ -22,7 +23,14 @@ function Home(props) {
       {/* <div>
         <SubmitButton /> add id when updating, if creating ignore
       </div> */}
+      <div>
+        <Link to="/signup">Signup</Link>
+      </div>
     </div>
+  ) : props.isLoading ? (
+    <div>Loading</div>
+  ) : (
+    <Redirect to="/signup" />
   );
 }
 
