@@ -5,6 +5,7 @@ import { Button } from 'antd';
 import classes from './index.module.css';
 import GalleryList from './gallery-list';
 import SubmitButton from '../SubmitButton';
+import GalleryBasicInfo from "../GalleryBasicInfo"
 
 function Home(props) {
   return (
@@ -19,6 +20,7 @@ function Home(props) {
       <div>
         <Link to="/rearrange">Rearrange Images</Link>
       </div>
+      {/*<GalleryBasicInfo/>*/}
       {/* <div>
         <SubmitButton /> add id when updating, if creating ignore
       </div> */}
