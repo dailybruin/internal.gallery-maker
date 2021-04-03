@@ -5,6 +5,7 @@ import { Button } from 'antd';
 
 import classes from './index.module.css';
 import GalleryList from './gallery-list';
+import CaptionsForm from "../CaptionForm";
 
 function Home(props) {
   return props.isLoggedIn ? (
@@ -22,6 +23,7 @@ function Home(props) {
       <div>
         <Link to="/signup">Signup</Link>
       </div>
+      <CaptionsForm/>
     </div>
   ) : props.isLoading ? (
     <div>Loading</div>

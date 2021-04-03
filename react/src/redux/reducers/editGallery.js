@@ -20,6 +20,22 @@ const editGallery = (state = initialState, action) => {
         gallery: newGallery
       }
     }
+    case "EDIT_CAPTION": {
+      // payload: {url: blah, newCaption: stuff}
+      let newGallery = state.gallery.map(img => {
+        if(img.url == action.payload.url)
+          return {
+            url: img.url,
+            caption: action.payload.newCaption
+          }
+        return img
+      })
+
+      return {
+        ...state,
+        gallery: newGallery
+      }
+    }
     default: {
       return state;
     }
