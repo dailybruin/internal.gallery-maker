@@ -20,6 +20,7 @@ from galleries import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('utils/', include('utils.urls')),
+    path('oauth/', include('oauth.urls')),
     path('gallery/', include('galleries.urls')),
     path('get_gallery_data/<int:pk>', views.GalleryRetrieve.as_view())
 ]

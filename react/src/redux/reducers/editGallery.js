@@ -44,7 +44,7 @@ const editGallery = (state = initialState, action) => {
           name: state.name,
           layout: state.layout,
           description: state.description,
-          images: undefined,
+          images: state.gallery,
         })
         .then((res) => {
           console.log(res);
