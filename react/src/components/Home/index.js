@@ -5,6 +5,7 @@ import { Button } from 'antd';
 
 import classes from './index.module.css';
 import GalleryList from './gallery-list';
+import SubmitButton from '../SubmitButton';
 
 function Home(props) {
   return props.isLoggedIn ? (
@@ -19,6 +20,9 @@ function Home(props) {
       <div>
         <Link to="/rearrange">Rearrange Images</Link>
       </div>
+      {/* <div>
+        <SubmitButton /> add id when updating, if creating ignore
+      </div> */}
       <div>
         <Link to="/signup">Signup</Link>
       </div>

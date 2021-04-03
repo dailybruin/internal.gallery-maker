@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
-import editGallery from "./editGallery";
+import { combineReducers } from 'redux';
+import editGallery from './editGallery';
 
 export default combineReducers({ editGallery });
