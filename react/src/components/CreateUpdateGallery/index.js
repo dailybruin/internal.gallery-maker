@@ -3,13 +3,16 @@ import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
 import CaptionsForm from "../CaptionForm";
 
+import GalleryBasicInfo from "../GalleryBasicInfo"
+import SubmitButton from '../SubmitButton';
+
 import { Steps, Button, notification} from "antd";
 import { useDispatch } from 'react-redux';
 import './CreateUpdateGallery.css';
 import { SERVER_URL } from '../../server_url';
 import axios from 'axios';
 
-const TOTAL_STEPS = 3;
+const TOTAL_STEPS = 4;
 const { Step } = Steps;
 
 function CreateUpdateGallery(props) {
@@ -20,10 +23,28 @@ function CreateUpdateGallery(props) {
         if (props.match.path === '/update/:id') {
             axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
                 .then(res => {
-                    let reduxGallery = res.data.images.map(img => ({url: img.img_url, caption: ""}));
+                    console.log(res.data)
+                    let reduxGallery = res.data.images.map(img => ({
+                        url: img.img_url, 
+                        caption: img.description,
+                        credits: img.credits,
+                        type: img.type
+                    }));
                     reduxDispatch({
                         type: "EDIT_GALLERY",
                         payload: [...reduxGallery]
+                    });
+                    reduxDispatch({
+                        type: "EDIT_NAME",
+                        payload: res.data.name
+                    });
+                    reduxDispatch({
+                        type: "EDIT_DESCRIPTION",
+                        payload: res.data.description
+                    });
+                    reduxDispatch({
+                        type: "EDIT_LAYOUT",
+                        payload: res.data.layout
                     });
                 })
                 .catch(err => {
@@ -39,11 +60,12 @@ function CreateUpdateGallery(props) {
     function renderStep(step) {
         switch (step) {
             case 0:
-                return <SelectImages/>
+                return <GalleryBasicInfo/>
             case 1:
-                return <CaptionsForm/>
-
+                return <SelectImages/>
             case 2:
+                return <CaptionsForm/>
+            case 3:
                 return <RearrangeImages/>
             default:
                 return null;
@@ -58,6 +80,8 @@ function CreateUpdateGallery(props) {
         setCurStep(curStep - 1);
     };
 
+    const submitbutton = props.match.path === '/update/:id'? <SubmitButton id={props.match.params.id}/>:<SubmitButton/>
+
     return (
         <div>
             { renderStep(curStep) }
@@ -66,6 +90,7 @@ function CreateUpdateGallery(props) {
                     current={curStep}
                     className="steps"
                 >
+                    <Step title="Basic info"/>
                     <Step title="Select images"/>
                     <Step title="Add captions"/>
                     <Step title="Rearrange images"/>
@@ -85,9 +110,8 @@ function CreateUpdateGallery(props) {
                             Next
                         </Button>
                         :
-                        <Button type="primary" onClick={() => console.log("ADD SUBMIT BUTTON HERE")}>
-                            Done
-                        </Button>
+                        submitbutton
+                        
                     }
                 </div>
             </div>

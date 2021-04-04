@@ -103,7 +103,7 @@ function CaptionsForm() {
             key={img.url} 
             img_url={img.url} 
             initialCaption={img.caption}
-            initialCredit={img.credit}
+            initialCredit={img.credits}
 
             />)}
     </div>)

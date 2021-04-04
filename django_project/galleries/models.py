@@ -31,14 +31,14 @@ class Image(models.Model):
     # image url
     img_url = models.URLField(max_length=200)
     # desc of img
-    description = models.TextField(max_length=300, default="")
+    description = models.TextField(max_length=300, blank=True)
     # photo creds
-    credits = models.TextField(max_length=50, null=True)
+    credits = models.TextField(max_length=50, blank=True)
 
     # specify order of imgs
     index = models.IntegerField()
 
-    # foregin key
+    # foreign key
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="images")
 
     # type of image (center, alternating)
