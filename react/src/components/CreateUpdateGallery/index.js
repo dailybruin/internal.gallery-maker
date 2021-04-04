@@ -9,7 +9,7 @@ import SubmitButton from '../SubmitButton';
 import { Steps, Button, notification} from "antd";
 import { useDispatch } from 'react-redux';
 import './CreateUpdateGallery.css';
-import { SERVER_URL } from '../../server_url';
+import { API_ROOT } from '../../constants/api';
 import axios from 'axios';
 
 const TOTAL_STEPS = 4;
@@ -21,7 +21,7 @@ function CreateUpdateGallery(props) {
 
     useEffect(() => {
         if (props.match.path === '/update/:id') {
-            axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
+            axios.get(`${API_ROOT}/gallery/${props.match.params.id}`)
                 .then(res => {
                     console.log(res.data)
                     let reduxGallery = res.data.images.map(img => ({

@@ -1,4 +1,4 @@
-import { SERVER_URL } from '../../server_url.js';
+import { API_ROOT } from '../../constants/api';
 import axios from 'axios';
 
 const initialState = {
@@ -40,7 +40,7 @@ const editGallery = (state = initialState, action) => {
     }
     case 'SUBMIT_GALLERY_CREATE': {
       axios
-        .post(`${SERVER_URL}/django/gallery/create_or_update_gallery`, {
+        .post(`${API_ROOT}/gallery/create_or_update_gallery`, {
           name: state.name,
           layout: state.layout,
           description: state.description,
@@ -56,7 +56,7 @@ const editGallery = (state = initialState, action) => {
     }
     case 'SUBMIT_GALLERY_EDIT': {
       axios
-        .post(`${SERVER_URL}/django/gallery/create_or_update_gallery`, {
+        .post(`${API_ROOT}/gallery/create_or_update_gallery`, {
           id: action.payload,
           name: state.name,
           layout: state.layout,
