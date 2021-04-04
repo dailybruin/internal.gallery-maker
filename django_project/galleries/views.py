@@ -30,21 +30,35 @@ class GalleryRetrieve(generics.RetrieveAPIView):
 def create_or_update_gallery(request):
     data = request.data.copy()
     id_exists = data.get("id", None)
+
+    if "name" not in data or "description" not in data or "layout" not in data:
+        return JsonResponse({"response": "Name, description, or layout does not exist."}, status=400)
+
+    gallery_serializer = None
     if id_exists is None:
-        if "name" not in data or "description" not in data or "layout" not in data:
-            return JsonResponse({"response": "Name, description, or layout does not exist."}, status=400)
-        gallery_serializer_class = GallerySerializer(data={"name": data["name"], "description": data["description"], "layout": data["layout"]})
-        if gallery_serializer_class.is_valid():
-            gallery = gallery_serializer_class.save()
-        else:
-            return JsonResponse(gallery_serializer_class.errors)
-        id = gallery.id
+        gallery_serializer = GallerySerializer(data={"name": data["name"], "description": data["description"], "layout": data["layout"]})
     else:
+        # check if gallery actually exists
         id = id_exists
         referenced_gallery = Gallery.objects.filter(id=id)
         if len(referenced_gallery) == 0:
             return JsonResponse({"response": "Gallery does not exist."}, status=400)
-        Gallery.objects.get(id=id).images.all().delete()
+
+        # delete old images
+        actual_gallery_obj = Gallery.objects.get(id=id)
+        actual_gallery_obj.images.all().delete()
+
+        # make serializer for updating existing gallery
+        gallery_serializer = GallerySerializer(actual_gallery_obj, data={"name": data["name"], "description": data["description"], "layout": data["layout"]})
+    
+    # save gallery (or update gallery if it already exists)
+    if gallery_serializer.is_valid():
+        gallery = gallery_serializer.save()
+    else:
+        return JsonResponse(gallery_serializer.errors)
+    id = gallery.id
+
+    # create images. If gallery alraedy existed, then the images were deleted earlier
     if "images" not in data:
         return JsonResponse({"response": "Images does not exist."}, status=400) 
     for index, image in enumerate(data["images"]):
