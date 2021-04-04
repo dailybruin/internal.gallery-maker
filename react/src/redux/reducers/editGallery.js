@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const initialState = {
   gallery: [],
-  name: 'default name',
+  name: '',
   description: '',
   layout: 'alt',
 };
@@ -74,6 +74,25 @@ const editGallery = (state = initialState, action) => {
     }
     case 'RESET_GALLERY': {
       return initialState;
+    }
+    case 'EDIT_DESCRIPTION': {
+      return {
+        ...state,
+        description: action.payload
+      }
+    }
+    case 'EDIT_NAME': {
+
+      return {
+        ...state,
+        name: action.payload
+      }
+    }
+    case 'EDIT_LAYOUT': {
+      return {
+        ...state,
+        layout: action.payload
+      }
     }
     default: {
       return state;
