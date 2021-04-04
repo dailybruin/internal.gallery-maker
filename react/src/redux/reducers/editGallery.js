@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const initialState = {
   gallery: [],
-  name: 'default name',
+  name: '',
   description: '',
   layout: 'alt',
 };

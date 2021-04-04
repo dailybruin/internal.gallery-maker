@@ -1,10 +1,16 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd';
+import {
+  useHistory,
+} from "react-router-dom";
+
 
 const SubmitButton = (props) => {
   //   const reduxGallery = useSelector((state) => state.editGallery.gallery); // for retrieving state
   const dispatch = useDispatch(); // for changing state
+  const history = useHistory();
+
   const submitGallery = () => {
     if (props.id) {
       dispatch({
@@ -20,6 +26,8 @@ const SubmitButton = (props) => {
     dispatch({
       type: 'RESET_GALLERY',
     });
+
+    history.push("/");
   };
   return <Button onClick={() => submitGallery()}>Submit</Button>;
 };

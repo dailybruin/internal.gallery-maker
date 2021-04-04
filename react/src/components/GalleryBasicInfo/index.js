@@ -20,7 +20,7 @@ function GalleryBasicInfo() {
   const dispatch = useDispatch(); // for changing state
   const data = useSelector((state) => state.editGallery);
  
-  //console.log(data)
+  console.log(data)
 
   const fieldsFromRedux = (data) => {
   	const fields_in_form = ["name", "description", "layout"]
@@ -58,7 +58,7 @@ function GalleryBasicInfo() {
   //   name: array of names,
   //   value: curr_value  
   // }
-  const [curr_fields, _] = useState(fieldsFromRedux(data))
+  const curr_fields = fieldsFromRedux(data)
 
   return (
   	<div>
