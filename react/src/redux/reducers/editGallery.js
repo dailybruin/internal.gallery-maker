@@ -94,6 +94,39 @@ const editGallery = (state = initialState, action) => {
         layout: action.payload
       }
     }
+    case "EDIT_CAPTION": {
+      // payload: {url: blah, newCaption: stuff}
+      let newGallery = state.gallery.map(img => {
+        if(img.url == action.payload.url)
+          return {
+            ...img,
+            caption: action.payload.newCaption
+          }
+        return img
+      })
+
+      return {
+        ...state,
+        gallery: newGallery
+      }
+    }
+    case "EDIT_CREDIT": {
+      // payload: {url: blah, newCredit: stuff}
+      // url identifies which image we are editing
+      let newGallery = state.gallery.map(img => {
+        if(img.url == action.payload.url)
+          return {
+            ...img,
+            credits: action.payload.newCredit
+          }
+        return img
+      })
+
+      return {
+        ...state,
+        gallery: newGallery
+      }
+    }
     default: {
       return state;
     }

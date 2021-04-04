@@ -112,7 +112,8 @@ function SelectImages(props) {
                 type: "EDIT_GALLERY",
                 payload: [...reduxGallery, {
                     url: clickedImg.sourceURL,
-                    caption: ""
+                    caption: "",
+                    credits: "",
                 }]
             });
         }

@@ -55,22 +55,23 @@ def create_or_update_gallery(request):
     if gallery_serializer.is_valid():
         gallery = gallery_serializer.save()
     else:
-        return JsonResponse(gallery_serializer.errors)
+        return JsonResponse(gallery_serializer.errors, status=400)
     id = gallery.id
 
     # create images. If gallery alraedy existed, then the images were deleted earlier
     if "images" not in data:
         return JsonResponse({"response": "Images does not exist."}, status=400) 
     for index, image in enumerate(data["images"]):
-        if "caption" not in image or "url" not in image:
+        if "caption" not in image or "url" not in image or "credits" not in image:
             return JsonResponse({"response": "Caption or image url does not exist."}, status=400)
         image.update({"gallery": id, "index": index})
         image["img_url"] = image.pop("url")
+        image["description"] = image.pop("caption")
         image_serializer_class = ImageSerializer(data=image)
         if image_serializer_class.is_valid():
             image_serializer_class.save()
         else:
-            return JsonResponse(image_serializer_class.errors)
+            return JsonResponse(image_serializer_class.errors, status=400)
     return JsonResponse(data)
         # {
         #     name:

@@ -1,0 +1,16 @@
+
+.image-caption-row {
+	height: 300px;
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: horizontal;
+}
+
+.caption-image{
+	height: 100%;
+	margin-right: 10px;
+}
+
+.caption-container{
+	margin-left: 5%;
+}

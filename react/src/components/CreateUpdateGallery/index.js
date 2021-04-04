@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
+import CaptionsForm from "../CaptionForm";
+
 import GalleryBasicInfo from "../GalleryBasicInfo"
 import SubmitButton from '../SubmitButton';
-
 
 import { Steps, Button, notification} from "antd";
 import { useDispatch } from 'react-redux';
@@ -22,7 +23,13 @@ function CreateUpdateGallery(props) {
         if (props.match.path === '/update/:id') {
             axios.get(`${SERVER_URL}/django/gallery/${props.match.params.id}`)
                 .then(res => {
-                    let reduxGallery = res.data.images.map(img => ({url: img.img_url, caption: img.description}));
+                    console.log(res.data)
+                    let reduxGallery = res.data.images.map(img => ({
+                        url: img.img_url, 
+                        caption: img.description,
+                        credits: img.credits,
+                        type: img.type
+                    }));
                     reduxDispatch({
                         type: "EDIT_GALLERY",
                         payload: [...reduxGallery]
@@ -57,7 +64,7 @@ function CreateUpdateGallery(props) {
             case 1:
                 return <SelectImages/>
             case 2:
-                return <h3>Add captions</h3>
+                return <CaptionsForm/>
             case 3:
                 return <RearrangeImages/>
             default:
