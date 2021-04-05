@@ -5,6 +5,7 @@ import Home from './Home';
 import CreateUpdateGallery from './CreateUpdateGallery';
 import Signup from './Signup';
 import { RearrangeImages } from './RearrangeImages';
+import { API_ROOT } from '../constants/api';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -14,7 +15,7 @@ function App() {
   });
   const getAuthentication = async () => {
     let response = await fetch(
-      'http://localhost:8000/django/oauth/get_logged_in'
+      `${API_ROOT}/oauth/get_logged_in`
     );
     // console.log('response', response);
     let text = await response.text();
