@@ -6,6 +6,7 @@ import CreateUpdateGallery from './CreateUpdateGallery';
 import Signup from './Signup';
 import { RearrangeImages } from './RearrangeImages';
 import { API_ROOT } from '../constants/api';
+import { LoginWrapper } from '../components/LoginWrapper';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -14,14 +15,12 @@ function App() {
     getAuthentication();
   });
   const getAuthentication = async () => {
-    let response = await fetch(
-      `${API_ROOT}/oauth/get_logged_in`
-    );
+    let response = await fetch(`${API_ROOT}/oauth/get_logged_in`);
     // console.log('response', response);
     let text = await response.text();
     text = JSON.parse(text);
-    console.log('response text', text["ok"]);
-    if (text["ok"]) {
+    console.log('response text', text['ok']);
+    if (text['ok']) {
       setLoggedIn(true);
       setLoading(false);
       console.log('set to true');
@@ -33,15 +32,38 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path="/create" component={CreateUpdateGallery} />
+        {/* <Route path="/create" component={CreateUpdateGallery} />
         <Route path="/update/:id" component={CreateUpdateGallery} />
+        <Route path="/rearrange" component={RearrangeImages} /> */}
         <Route path="/signup" component={Signup} />
-        <Route path="/rearrange" component={RearrangeImages} />
-        <Route
+        <LoginWrapper
+          path="/create"
+          component={CreateUpdateGallery}
+          isLoggedIn={loggedIn}
+          isLoading={isLoading}
+        />
+        <LoginWrapper
+          path="/update/:id"
+          component={CreateUpdateGallery}
+          isLoggedIn={loggedIn}
+          isLoading={isLoading}
+        />
+        <LoginWrapper
+          path="/rearrange"
+          component={RearrangeImages}
+          isLoggedIn={loggedIn}
+          isLoading={isLoading}
+        />
+        <LoginWrapper
+          path="/"
+          component={Home}
+          isLoggedIn={loggedIn}
+          isLoading={isLoading}
+        />
+        {/* <Route
           path="/"
           render={() => <Home isLoggedIn={loggedIn} isLoading={isLoading} />}
-        />
-        
+        /> */}
       </Switch>
     </div>
   );
