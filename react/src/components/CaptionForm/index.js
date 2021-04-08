@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
+import { Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import "./caption.css"
+import { MAX_CAPTION_LEN, MAX_CREDIT_LEN } from "constants/formInput"
+
+const { TextArea } = Input
 
 // helper component
 function CaptionImagePair(props){
@@ -57,11 +61,22 @@ function CaptionImagePair(props){
     <div className="image-caption-row">
         <img className="caption-image" src={props.img_url}/>
         <div>
-            <h4>Caption: </h4>
-            <textarea value={caption} onChange={e => updateStateAndReduxCaption(e.target.value)}/>
-
-            <h4>Credit: </h4>
-            <textarea value={credit} onChange={e => updateStateAndReduxCredit(e.target.value)}/>
+            <Form.Item label="Caption">
+                <TextArea
+                    maxLength={MAX_CAPTION_LEN}
+                    showCount
+                    value={caption}
+                    onChange={e => updateStateAndReduxCaption(e.target.value)}
+                />
+            </Form.Item>
+            <Form.Item label="Credit">
+                <TextArea
+                    maxLength={MAX_CREDIT_LEN}
+                    showCount
+                    value={credit}
+                    onChange={e => updateStateAndReduxCredit(e.target.value)}
+                />
+            </Form.Item>
         </div>
     </div>
    )
