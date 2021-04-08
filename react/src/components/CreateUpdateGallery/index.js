@@ -7,17 +7,25 @@ import GalleryBasicInfo from "../GalleryBasicInfo"
 import SubmitButton from '../SubmitButton';
 
 import { Steps, Button, notification} from "antd";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import './CreateUpdateGallery.css';
 import { API_ROOT } from '../../constants/api';
 import axios from 'axios';
+import { Prompt } from 'react-router';
 
 const TOTAL_STEPS = 4;
 const { Step } = Steps;
 
 function CreateUpdateGallery(props) {
-    const [curStep, setCurStep] = useState(0); // step 0 == select images, 1 == add captions, 2 == rearrange images
+    const [curStep, setCurStep] = useState(0);
+    const [dirty, setDirty] = useState(false);
     const reduxDispatch = useDispatch();
+    const reduxStore = useStore();
+
+    useEffect(() => {
+        const unsubscribe = reduxStore.subscribe(() => setDirty(true));
+        return () => unsubscribe();
+    }, [reduxStore]);
 
     useEffect(() => {
         if (props.match.path === '/update/:id') {
@@ -84,6 +92,10 @@ function CreateUpdateGallery(props) {
 
     return (
         <div>
+            <Prompt 
+                when={dirty}
+                message="Are you sure you want to leave this page? You will lose any unsaved changes."
+            />
             { renderStep(curStep) }
             <div className="steps-nav-container">
                 <Steps 
