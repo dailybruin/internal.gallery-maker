@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import React from 'react';
+import { Form, Input, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { PageHeader } from 'antd';
 
@@ -10,9 +10,6 @@ const layout = {
   labelCol: { span: 2 },
   wrapperCol: { span: 8 },
 };
-
-
-
 
 
 function GalleryBasicInfo() {
