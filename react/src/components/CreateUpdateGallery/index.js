@@ -94,7 +94,7 @@ function CreateUpdateGallery(props) {
         <div>
             <Prompt 
                 when={dirty}
-                message="Are you sure you want to leave this page? You will lose any unsaved changes."
+                message="You have unsaved changes. Are you sure you want to leave this page?"
             />
             { renderStep(curStep) }
             <div className="steps-nav-container">
