@@ -1,6 +1,3 @@
-import { API_ROOT } from '../../constants/api';
-import axios from 'axios';
-
 const initialState = {
   gallery: [],
   name: '',
@@ -38,94 +35,59 @@ const editGallery = (state = initialState, action) => {
         gallery: newGallery,
       };
     }
-    case 'SUBMIT_GALLERY_CREATE': {
-      axios
-        .post(`${API_ROOT}/gallery/create_or_update_gallery`, {
-          name: state.name,
-          layout: state.layout,
-          description: state.description,
-          images: state.gallery,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      return state;
-    }
-    case 'SUBMIT_GALLERY_EDIT': {
-      axios
-        .post(`${API_ROOT}/gallery/create_or_update_gallery`, {
-          id: action.payload,
-          name: state.name,
-          layout: state.layout,
-          description: state.description,
-          images: state.gallery,
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      return state;
-    }
     case 'RESET_GALLERY': {
       return initialState;
     }
     case 'EDIT_DESCRIPTION': {
       return {
         ...state,
-        description: action.payload
-      }
+        description: action.payload,
+      };
     }
     case 'EDIT_NAME': {
-
       return {
         ...state,
-        name: action.payload
-      }
+        name: action.payload,
+      };
     }
     case 'EDIT_LAYOUT': {
       return {
         ...state,
-        layout: action.payload
-      }
+        layout: action.payload,
+      };
     }
-    case "EDIT_CAPTION": {
+    case 'EDIT_CAPTION': {
       // payload: {url: blah, newCaption: stuff}
-      let newGallery = state.gallery.map(img => {
-        if(img.url == action.payload.url)
+      let newGallery = state.gallery.map((img) => {
+        if (img.url == action.payload.url)
           return {
             ...img,
-            caption: action.payload.newCaption
-          }
-        return img
-      })
+            caption: action.payload.newCaption,
+          };
+        return img;
+      });
 
       return {
         ...state,
-        gallery: newGallery
-      }
+        gallery: newGallery,
+      };
     }
-    case "EDIT_CREDIT": {
+    case 'EDIT_CREDIT': {
       // payload: {url: blah, newCredit: stuff}
       // url identifies which image we are editing
-      let newGallery = state.gallery.map(img => {
-        if(img.url == action.payload.url)
+      let newGallery = state.gallery.map((img) => {
+        if (img.url == action.payload.url)
           return {
             ...img,
-            credits: action.payload.newCredit
-          }
-        return img
-      })
+            credits: action.payload.newCredit,
+          };
+        return img;
+      });
 
       return {
         ...state,
-        gallery: newGallery
-      }
+        gallery: newGallery,
+      };
     }
     default: {
       return state;
