@@ -74,10 +74,10 @@ function GalleryBasicInfo() {
 		    }}
 	    	>
 	      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-	        <Input />
+	        <Input maxLength={50} />
 	      </Form.Item>
 	      <Form.Item name="description" label="Description" rules={[{ required: true }]}>
-	        <TextArea />
+	        <TextArea maxLength={200} showCount />
 	      </Form.Item>
 	      <Form.Item name="layout" label="Layout Style" rules={[{ required: true }]}>
 	        <Select
