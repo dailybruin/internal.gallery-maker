@@ -22,7 +22,6 @@ const SubmitButton = (props) => {
   const history = useHistory();
 
   const submitGallery = () => {
-    let success = false;
     const successCallback = () => {
       dispatch({
         type: 'RESET_GALLERY',
@@ -33,7 +32,7 @@ const SubmitButton = (props) => {
       openNotification();
     };
     if (props.id) {
-      success = submitGalleryEdit(
+      submitGalleryEdit(
         props.id,
         state.name,
         state.layout,
@@ -43,7 +42,7 @@ const SubmitButton = (props) => {
         failureCallback
       );
     } else {
-      success = submitGalleryCreate(
+      submitGalleryCreate(
         state.name,
         state.layout,
         state.description,

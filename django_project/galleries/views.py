@@ -5,10 +5,7 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
-
-
-
-
+from django.db import transaction
 
 
 class GalleryViewSet(viewsets.ModelViewSet):
@@ -27,12 +24,19 @@ class GalleryRetrieve(generics.RetrieveAPIView):
     serializer_class = MainSiteGallerySerializer
 
 @api_view(["POST"])
+@transaction.atomic
 def create_or_update_gallery(request):
     data = request.data.copy()
     id_exists = data.get("id", None)
 
+    # Error checking
     if "name" not in data or "description" not in data or "layout" not in data:
         return JsonResponse({"response": "Name, description, or layout does not exist."}, status=400)
+    if "images" not in data:
+        return JsonResponse({"response": "Images does not exist."}, status=400)
+    for index, image in enumerate(data["images"]):
+        if "caption" not in image or "url" not in image or "credits" not in image:
+            return JsonResponse({"response": "Caption or image url does not exist."}, status=400)
 
     gallery_serializer = None
     if id_exists is None:
@@ -59,11 +63,7 @@ def create_or_update_gallery(request):
     id = gallery.id
 
     # create images. If gallery alraedy existed, then the images were deleted earlier
-    if "images" not in data:
-        return JsonResponse({"response": "Images does not exist."}, status=400) 
     for index, image in enumerate(data["images"]):
-        if "caption" not in image or "url" not in image or "credits" not in image:
-            return JsonResponse({"response": "Caption or image url does not exist."}, status=400)
         image.update({"gallery": id, "index": index})
         image["img_url"] = image.pop("url")
         image["description"] = image.pop("caption")

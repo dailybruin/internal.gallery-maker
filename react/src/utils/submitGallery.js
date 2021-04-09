@@ -27,15 +27,15 @@ const submitGalleryCreate = async (
     });
 };
 
-const submitGalleryEdit = async ({
+const submitGalleryEdit = async (
   id,
   name,
   layout,
   description,
   gallery,
   successCallback,
-  failureCallback,
-}) => {
+  failureCallback
+) => {
   axios
     .post(`${API_ROOT}/gallery/create_or_update_gallery`, {
       id: id,
