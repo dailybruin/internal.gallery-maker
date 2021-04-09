@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
 import CaptionsForm from "../CaptionForm";
@@ -21,17 +21,22 @@ function CreateUpdateGallery(props) {
     const [dirty, setDirty] = useState(false);
     const reduxDispatch = useDispatch();
     const reduxStore = useStore();
+    const unsubscribe = useRef(null);
 
     useEffect(() => {
-        const unsubscribe = reduxStore.subscribe(() => setDirty(true));
-        return () => unsubscribe();
-    }, [reduxStore]);
+        const reduxSubscribe = () => {
+            unsubscribe.current = reduxStore.subscribe(() => {
+                setDirty(true);
+                unsubscribe.current();
+            })
+        }
 
-    useEffect(() => {
+        const reduxUnsubscribe = () => 
+            () => unsubscribe.current()
+
         if (props.match.path === '/update/:id') {
             axios.get(`${API_ROOT}/gallery/${props.match.params.id}`)
                 .then(res => {
-                    console.log(res.data)
                     let reduxGallery = res.data.images.map(img => ({
                         url: img.img_url, 
                         caption: img.description,
@@ -55,6 +60,7 @@ function CreateUpdateGallery(props) {
                         payload: res.data.layout
                     });
                 })
+                .then(() => reduxSubscribe())
                 .catch(err => {
                     notification.error({
                         message: "Failed to retrieve galleries from server.",
@@ -62,8 +68,12 @@ function CreateUpdateGallery(props) {
                         duration: 0,
                     });
                 });
-        }
-    }, [props.match.path, props.match.params.id, reduxDispatch]);
+                return reduxUnsubscribe();
+        } else {
+            reduxSubscribe();
+            return reduxUnsubscribe();
+        }   
+    }, [props.match.path, props.match.params.id, reduxDispatch, reduxStore]);
 
     function renderStep(step) {
         switch (step) {
