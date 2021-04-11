@@ -7,6 +7,7 @@ import { CloseCircleTwoTone } from '@ant-design/icons';
 
 const DEFAULT_PER_PAGE = 50;
 
+// helper component
 function SelectedImage(props) {
     return (
         <div className="selected-img-container">
@@ -40,23 +41,19 @@ state, I had to move the state update logic for displayed image data to a reduce
 */
 const initialState = { imageData: [] }
 
-const setImageData = (imageData, selectedImages) => {
-    return imageData.map(img => 
-        ({
-            sourceURL: img.source_url,
-            selected: selectedImages.includes(img.source_url)
-        })
-    );
-}
-
 const make_reducer = (reduxGallery) => 
     (state, action) => {
-        let newImageData, selectedImages;
+        let newImageData;
 
         switch (action.type) {
             case 'updatePage':
-                selectedImages = reduxGallery.map(img => img.url);
-                newImageData = setImageData(action.payload, selectedImages);
+                let selectedImages = reduxGallery.map(img => img.url);
+                newImageData = action.payload.map(img => 
+                    ({
+                        sourceURL: img.source_url,
+                        selected: selectedImages.includes(img.source_url)
+                    })
+                );
                 return { ...state, imageData: newImageData }
             
             case 'toggleSelectedField':

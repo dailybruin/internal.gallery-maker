@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import SelectImages from '../SelectImages';
 import { RearrangeImages } from '../RearrangeImages';
 import CaptionsForm from "../CaptionForm";
@@ -7,23 +7,36 @@ import GalleryBasicInfo from "../GalleryBasicInfo"
 import SubmitButton from '../SubmitButton';
 
 import { Steps, Button, notification} from "antd";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import './CreateUpdateGallery.css';
 import { API_ROOT } from '../../constants/api';
 import axios from 'axios';
+import { Prompt } from 'react-router';
 
 const TOTAL_STEPS = 4;
 const { Step } = Steps;
 
 function CreateUpdateGallery(props) {
-    const [curStep, setCurStep] = useState(0); // step 0 == select images, 1 == add captions, 2 == rearrange images
+    const [curStep, setCurStep] = useState(0);
+    const [dirty, setDirty] = useState(false);
     const reduxDispatch = useDispatch();
+    const reduxStore = useStore();
+    const unsubscribe = useRef(null);
 
     useEffect(() => {
+        const reduxSubscribe = () => {
+            unsubscribe.current = reduxStore.subscribe(() => {
+                setDirty(true);
+                unsubscribe.current();
+            })
+        }
+
+        const reduxUnsubscribe = () => 
+            () => unsubscribe.current()
+
         if (props.match.path === '/update/:id') {
             axios.get(`${API_ROOT}/gallery/${props.match.params.id}`)
                 .then(res => {
-                    console.log(res.data)
                     let reduxGallery = res.data.images.map(img => ({
                         url: img.img_url, 
                         caption: img.description,
@@ -47,6 +60,7 @@ function CreateUpdateGallery(props) {
                         payload: res.data.layout
                     });
                 })
+                .then(() => reduxSubscribe())
                 .catch(err => {
                     notification.error({
                         message: "Failed to retrieve galleries from server.",
@@ -54,8 +68,12 @@ function CreateUpdateGallery(props) {
                         duration: 0,
                     });
                 });
-        }
-    }, [props.match.path, props.match.params.id, reduxDispatch]);
+                return reduxUnsubscribe();
+        } else {
+            reduxSubscribe();
+            return reduxUnsubscribe();
+        }   
+    }, [props.match.path, props.match.params.id, reduxDispatch, reduxStore]);
 
     function renderStep(step) {
         switch (step) {
@@ -84,6 +102,10 @@ function CreateUpdateGallery(props) {
 
     return (
         <div>
+            <Prompt 
+                when={dirty}
+                message="You have unsaved changes. Are you sure you want to leave this page?"
+            />
             { renderStep(curStep) }
             <div className="steps-nav-container">
                 <Steps 
