@@ -6,7 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.template import RequestContext
+from os import getenv
+from base64 import b64encode
+import requests
+# from django.template import RequestContext
 
 
 
@@ -30,11 +33,34 @@ class GalleryRetrieve(generics.RetrieveAPIView):
 @api_view(["POST"])
 @csrf_exempt
 def uploadToWordPress(request):
+    user = getenv("WORDPRESS_API_USER")
+    pw = getenv("WORDPRESS_API_PW")
+    auth_string = f"{user}:{pw}"
+    auth_data = auth_string.encode("utf-8")
+    url = getenv("WORDPRESS_API_URL")
+    basic_auth_header = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': "Basic " + b64encode(auth_data).decode("utf-8")
+    }
     print("hello")
     print(request.FILES)
-    # wp_res = requests.post(f"{self.url}/wp-json/wp/v2/media", headers=headers, data=data)
+    file_name = request.POST["title"]
+    # wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
     image = request.FILES['image'][0]
-    return JsonResponse({"done" : "ok"});
+    headers = basic_auth_header
+    headers["Content-Disposition"] = f"form-data; filename={file_name}"
+    data = image
+    wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
+    if wp_res.ok:
+        res_json = wp_res.json()
+        print(f"Successfully uploaded image {file_name} to WordPress")
+        return JsonResponse({"ok" : "true"});
+    else:
+        err_message = f"Unable to upload image {file_name} to WordPress"
+        print("Fail")
+        # raise PublishError(err_message)
+        return JsonResponse({"ok" : "false"});
+
 
 @api_view(["POST"])
 def create_or_update_gallery(request):
