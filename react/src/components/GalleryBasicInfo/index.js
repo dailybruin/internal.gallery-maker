@@ -1,7 +1,9 @@
-import React, {useState} from 'react';
-import { Form, Input, Button, Select } from 'antd';
+import React from 'react';
+import { Form, Input, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { PageHeader } from 'antd';
+
+import { MAX_NAME_LEN, MAX_DESCR_LEN } from "constants/formInput"
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -10,9 +12,6 @@ const layout = {
   labelCol: { span: 2 },
   wrapperCol: { span: 8 },
 };
-
-
-
 
 
 function GalleryBasicInfo() {
@@ -74,10 +73,10 @@ function GalleryBasicInfo() {
 		    }}
 	    	>
 	      <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-	        <Input />
+	        <Input maxLength={MAX_NAME_LEN} />
 	      </Form.Item>
 	      <Form.Item name="description" label="Description" rules={[{ required: true }]}>
-	        <TextArea />
+	        <TextArea maxLength={MAX_DESCR_LEN} showCount />
 	      </Form.Item>
 	      <Form.Item name="layout" label="Layout Style" rules={[{ required: true }]}>
 	        <Select
