@@ -5,8 +5,8 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
-
-
+from django.views.decorators.csrf import csrf_exempt
+from django.template import RequestContext
 
 
 
@@ -25,6 +25,13 @@ class ImageViewSet(viewsets.ModelViewSet):
 class GalleryRetrieve(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
     serializer_class = MainSiteGallerySerializer
+    
+
+@api_view(["POST"])
+@csrf_exempt
+def uploadToWordPress(request):
+    print("hello")
+    return JsonResponse({"done" : "ok"});
 
 @api_view(["POST"])
 def create_or_update_gallery(request):
@@ -81,3 +88,4 @@ def create_or_update_gallery(request):
         # }
         # create gallery first, get id, then create many image objects with that gallery object id
         # 
+    

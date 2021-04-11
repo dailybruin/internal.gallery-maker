@@ -5,6 +5,7 @@ import Home from './Home';
 import CreateUpdateGallery from './CreateUpdateGallery';
 import Signup from './Signup';
 import { RearrangeImages } from './RearrangeImages';
+import UploadToWordpress from './UploadToWordpress';
 import { API_ROOT } from '../constants/api';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
         <Route path="/update/:id" component={CreateUpdateGallery} />
         <Route path="/signup" component={Signup} />
         <Route path="/rearrange" component={RearrangeImages} />
+        <Route path="/upload" component={UploadToWordpress} />
         <Route
           path="/"
           render={() => <Home isLoggedIn={loggedIn} isLoading={isLoading} />}

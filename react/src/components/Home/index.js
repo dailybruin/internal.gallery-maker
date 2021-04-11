@@ -18,6 +18,9 @@ function Home(props) {
       <Button type="primary">
         <Link to="/create">New Gallery</Link>
       </Button>
+      <div>
+        <Link to="/upload">UploadToWordpress</Link>
+      </div>
       {/*<div>
         <Link to="/rearrange">Rearrange Images</Link>
       </div>*/}

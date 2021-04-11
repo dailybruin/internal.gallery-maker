@@ -8,6 +8,7 @@ router.register("", views.GalleryViewSet)
  
 
 urlpatterns = [
+    path("upload", views.uploadToWordPress),
     path("create_or_update_gallery", views.create_or_update_gallery),
     path("", include(router.urls)),
 ]
