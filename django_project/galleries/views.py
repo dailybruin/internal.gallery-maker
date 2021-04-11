@@ -31,6 +31,9 @@ class GalleryRetrieve(generics.RetrieveAPIView):
 @csrf_exempt
 def uploadToWordPress(request):
     print("hello")
+    print(request.FILES)
+    # wp_res = requests.post(f"{self.url}/wp-json/wp/v2/media", headers=headers, data=data)
+    image = request.FILES['image'][0]
     return JsonResponse({"done" : "ok"});
 
 @api_view(["POST"])
