@@ -20,7 +20,11 @@ function App() {
     let text = await response.text();
     text = JSON.parse(text);
     console.log('response text', text['ok']);
-    if (text['ok']) {
+    console.log('response.ok', response.ok);
+    console.log('text', text);
+    let worked = text['ok'] == 'False' ? false : true;
+    console.log('worked', worked);
+    if (worked) {
       setLoggedIn(true);
       setLoading(false);
       console.log('set to true');
