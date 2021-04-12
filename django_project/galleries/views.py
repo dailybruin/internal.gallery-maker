@@ -6,24 +6,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.db import transaction
+from django.contrib.auth.decorators import login_required
 
 
 class GalleryViewSet(viewsets.ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
     pagination_class = GalleryPagination
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class ImageViewSet(viewsets.ModelViewSet):
     queryset = Image.objects.all()
     serializer_class = ImageSerializer
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
 class GalleryRetrieve(generics.RetrieveAPIView):
     queryset = Gallery.objects.all()
     serializer_class = MainSiteGallerySerializer
 
 @api_view(["POST"])
+@login_required
 @transaction.atomic
 def create_or_update_gallery(request):
     data = request.data.copy()
