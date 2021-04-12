@@ -77,7 +77,8 @@ function SelectImages(props) {
     const [totalItems, setTotalItems] = useState(0);
 
     useEffect(() => {
-        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${pageSize}&orderby=date`)
+        const timestamp = Date.now();
+        axios.get(`https://wp.dailybruin.com/wp-json/wp/v2/media?page=${page}&per_page=${pageSize}&orderby=date&to_prevent_caching=${timestamp}`)
             .then(res => {
                 dispatch({ type: 'updatePage', payload: res.data });
                 setTotalItems(res.headers["x-wp-total"]);
