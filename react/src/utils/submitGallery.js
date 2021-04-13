@@ -1,6 +1,32 @@
 import { API_ROOT } from '../constants/api';
 import axios from 'axios';
 
+// https://docs.djangoproject.com/en/dev/ref/csrf/#ajax
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function generate_headers(){
+  return {
+    headers: {
+      "X-CSRFToken": getCookie('csrftoken')
+    }
+  }
+}
+
+
 const submitGalleryCreate = async (
   name,
   layout,
@@ -15,7 +41,7 @@ const submitGalleryCreate = async (
       layout: layout,
       description: description,
       images: gallery,
-    })
+    }, generate_headers())
     .then((res) => {
       console.log(res);
       console.log('got to .then');
@@ -43,7 +69,7 @@ const submitGalleryEdit = async (
       layout: layout,
       description: description,
       images: gallery,
-    })
+    }, generate_headers())
     .then((res) => {
       console.log(res);
       console.log('got to .then');
