@@ -31,15 +31,29 @@ class Image(models.Model):
     # image url
     img_url = models.URLField(max_length=200)
     # desc of img
-    description = models.TextField(max_length=300, default="")
+    description = models.TextField(max_length=300, blank=True)
     # photo creds
-    credits = models.TextField(max_length=50, null=True)
+    credits = models.TextField(max_length=50, blank=True)
 
     # specify order of imgs
     index = models.IntegerField()
 
-    # foregin key
+    # foreign key
     gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="images")
+
+    # type of image (center, alternating)
+    CENTER_PHOTO= 'center-photo'
+    ALT_PHOTO = 'alt-photo'
+
+    POSSIBLE_TYPE_CHOICES = [
+        (CENTER_PHOTO, CENTER_PHOTO),
+        (ALT_PHOTO, ALT_PHOTO)
+    ]
+    type = models.CharField(
+        max_length=12,
+        choices=POSSIBLE_TYPE_CHOICES,
+        default = ALT_PHOTO
+    )
 
     class Meta:
         ordering = ['index']
