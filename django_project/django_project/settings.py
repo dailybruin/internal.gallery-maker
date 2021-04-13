@@ -31,6 +31,7 @@ if os.environ.get('SECRET_KEY'):
 else:
     SECRET_KEY = '_i@@y#sw+z^q1+xk2wbr2$cz1$-ll44(!f74lce!e$qkw$i(dg'
 SLACK_SECRET_KEY = os.environ.get('SLACK_SECRET_KEY')
+SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
