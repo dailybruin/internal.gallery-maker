@@ -8,6 +8,7 @@ function Signup() {
   return (
     <div className="signup-container">
       {/* <a href={url}>Do things.</a> */}
+      <h1 className="signup-title"> Gallery Maker </h1>
       <div className="slack-link-container">
         <a href={"https://slack.com/oauth/v2/authorize?user_scope=identity.basic&client_id=4526132454.1973927489168&redirect_uri="+ redirect_uri + "&state="+redirect_uri}>
           <img

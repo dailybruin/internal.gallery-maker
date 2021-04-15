@@ -11,3 +11,9 @@
   width: 100vw;
   height: 100vh;
 }
+
+.signup-title {
+	color: gold;
+	padding-top: 40px;
+	background-color: mediumpurple;
+}
