@@ -18,9 +18,7 @@ function Home(props) {
       <Button type="primary">
         <Link to="/create">New Gallery</Link>
       </Button>
-      <div>
-        <Link to="/signup">Signup</Link>
-      </div>
+      
     </div>
   );
 }

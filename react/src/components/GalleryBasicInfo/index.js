@@ -83,7 +83,6 @@ function GalleryBasicInfo() {
 	          defaultValue="alt"
 	        >
 	          <Option value="alt">Alternating</Option>
-	          <Option value="bcs">Big Center Stream</Option>
 	        </Select>
 	      </Form.Item>
 	      
