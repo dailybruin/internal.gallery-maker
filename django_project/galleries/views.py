@@ -8,7 +8,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from os import getenv
 from base64 import b64encode
+import os
+# import base64
 import requests
+from django_project.settings import WP_USERNAME
+from django_project.settings import WP_PWD
+from django_project.settings import WP_URL
 # from django.template import RequestContext
 
 
@@ -33,24 +38,25 @@ class GalleryRetrieve(generics.RetrieveAPIView):
 @api_view(["POST"])
 @csrf_exempt
 def uploadToWordPress(request):
-    user = getenv("WORDPRESS_API_USER")
-    pw = getenv("WORDPRESS_API_PW")
+    user = WP_USERNAME
+    pw = os.getenv("WP_PWD")
     auth_string = f"{user}:{pw}"
     auth_data = auth_string.encode("utf-8")
-    url = getenv("WORDPRESS_API_URL")
+    url = os.getenv("WP_URL")
+    file_type = request.FILES['image'].content_type
     basic_auth_header = {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'content-Type': str(file_type),
         'Authorization': "Basic " + b64encode(auth_data).decode("utf-8")
     }
-    print("hello")
-    print(request.FILES)
-    file_name = request.POST["title"]
-    # wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
-    image = request.FILES['image'][0]
+    file_extension = (file_type.split('/'))[1]
+    # print(file_extension)
+    file_name = str(request.POST['title']) + '.' + file_extension
+    image = request.FILES['image']
     headers = basic_auth_header
-    headers["Content-Disposition"] = f"form-data; filename={file_name}"
-    data = image
+    headers["Content-Disposition"] = f"attachment; filename={file_name}"
+    data=image.open('rb').read()
     wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
+    print(wp_res.text)
     if wp_res.ok:
         res_json = wp_res.json()
         print(f"Successfully uploaded image {file_name} to WordPress")
@@ -59,8 +65,8 @@ def uploadToWordPress(request):
         err_message = f"Unable to upload image {file_name} to WordPress"
         print("Fail")
         # raise PublishError(err_message)
-        return JsonResponse({"ok" : "false"});
-
+        raise ValueError(err_message);
+       
 
 @api_view(["POST"])
 def create_or_update_gallery(request):

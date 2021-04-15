@@ -35,6 +35,9 @@ SLACK_SECRET_KEY = os.environ.get('SLACK_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
+WP_USERNAME = os.environ.get('WP_USERNAME')
+WP_PWD = os.environ.get('WP_PWD')
+WP_URL = os.environ.get('WP_URL')
 # SLACK_ENDPOINT = env('SLACK_ENDPOINT')
 
 

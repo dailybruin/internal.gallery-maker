@@ -1,6 +1,7 @@
 // import React, { useEffect, useState } from 'react';
 import React, { Component } from 'react';
 import axios from 'axios';
+import { API_ROOT } from '../../constants/api';
 class UploadToWordpress extends Component{
     state = {
         title: '',
@@ -29,7 +30,7 @@ class UploadToWordpress extends Component{
         form_data.append('image', this.state.image, this.state.image.name);
         form_data.append('title', this.state.title);
         form_data.append('content', this.state.content);
-        let url = 'http://localhost:8000/django/gallery/upload';
+        let url = API_ROOT + '/gallery/upload';
         const headers = {
             'content-type': 'multipart/form-data'
             // 'Authorization': 'JWT fefege...'
@@ -51,7 +52,7 @@ class UploadToWordpress extends Component{
                 <input type="text" placeholder='Title' id='title' value={this.state.title} onChange={this.handleChange} required/>
               </p>
               <p>
-                <input type="text" placeholder='Content' id='content' value={this.state.content} onChange={this.handleChange} required/>
+                <input type="text" placeholder='Content' id='content' value={this.state.content} onChange={this.handleChange} />
     
               </p>
               <p>
