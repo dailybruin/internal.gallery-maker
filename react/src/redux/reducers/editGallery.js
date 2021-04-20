@@ -89,6 +89,24 @@ const editGallery = (state = initialState, action) => {
         gallery: newGallery,
       };
     }
+
+    case 'EDIT_TYPE': {
+      let newGallery = state.gallery.map((img) => {
+        if (img.url == action.payload.url) {
+          return {
+            ...img,
+            type: action.payload.newType,
+          };
+        }
+        return img;
+      });
+      
+      return {
+        ...state,
+        gallery: newGallery,
+      }
+    }
+
     default: {
       return state;
     }

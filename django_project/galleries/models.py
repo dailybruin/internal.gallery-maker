@@ -12,14 +12,16 @@ class Gallery(models.Model):
 
     ALT= 'alt'
     NOTALT = 'notalt'
+    BIG_CENTERED_STREAM = 'big-centered-stream'
 
     POSSIBLE_VIEW_CHOICES = [
         (ALT, 'alternating'),
-        (NOTALT, 'not-alternating')
+        (NOTALT, 'not-alternating'),
+        (BIG_CENTERED_STREAM, BIG_CENTERED_STREAM)
     ]
 
     layout = models.CharField(
-        max_length=10,
+        max_length=20,
         choices=POSSIBLE_VIEW_CHOICES,
         default = ALT
     )
@@ -44,13 +46,15 @@ class Image(models.Model):
     # type of image (center, alternating)
     CENTER_PHOTO= 'center-photo'
     ALT_PHOTO = 'alt-photo'
+    BIG_CENTERED_PHOTO = 'big-centered-photo'
 
     POSSIBLE_TYPE_CHOICES = [
         (CENTER_PHOTO, CENTER_PHOTO),
-        (ALT_PHOTO, ALT_PHOTO)
+        (ALT_PHOTO, ALT_PHOTO),
+        (BIG_CENTERED_PHOTO, BIG_CENTERED_PHOTO)
     ]
     type = models.CharField(
-        max_length=12,
+        max_length=18,
         choices=POSSIBLE_TYPE_CHOICES,
         default = ALT_PHOTO
     )

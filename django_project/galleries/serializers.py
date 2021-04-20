@@ -1,19 +1,22 @@
 from rest_framework import serializers
-
 from .models import Gallery, Image
+from .constants import galleryOptions
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = ['img_url', 'description', 'credits', 'index', 'gallery', 'id', 'type']
 
-class GallerySerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        if data['type'] not in galleryOptions[data['gallery'].layout]:
+            raise serializers.ValidationError('A gallery of layout type {} cannot contain an image of type {}'.format(data['gallery'].layout, data['type']))
+        return data
 
+class GallerySerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True, read_only=True)
     class Meta:
         model = Gallery
         fields = ['layout', 'images', 'id', 'name', 'description']
-
 
 
 class MainSiteImageSerializer(serializers.ModelSerializer):
@@ -22,8 +25,6 @@ class MainSiteImageSerializer(serializers.ModelSerializer):
         fields = ['img_url', 'description', 'credits', 'type']
 
 class MainSiteGallerySerializer(serializers.ModelSerializer):
-    
-
     data = serializers.SerializerMethodField('get_images_as_data')
     layout = serializers.SerializerMethodField()
 
