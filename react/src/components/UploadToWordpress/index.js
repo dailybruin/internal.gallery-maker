@@ -39,7 +39,13 @@ class UploadToWordpress extends Component{
           headers: headers
         })
             .then(res => {
+              // let response = res.
               console.log(res.data);
+              if (res.data["ok"] === "false")
+                alert(res.data["message"]);
+              else
+                alert("Successful update!");
+              
             })
             .catch(err => console.log(err))
       };

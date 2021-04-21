@@ -55,6 +55,7 @@ def uploadToWordPress(request):
     headers = basic_auth_header
     headers["Content-Disposition"] = f"attachment; filename={file_name}"
     data=image.open('rb').read()
+    wp_res = ""
     wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
     print(wp_res.text)
     if wp_res.ok:
@@ -65,7 +66,8 @@ def uploadToWordPress(request):
         err_message = f"Unable to upload image {file_name} to WordPress"
         print("Fail")
         # raise PublishError(err_message)
-        raise ValueError(err_message);
+        return JsonResponse({"ok" : "false",
+                             "message": err_message});
        
 
 @api_view(["POST"])
