@@ -89,6 +89,40 @@ const editGallery = (state = initialState, action) => {
         gallery: newGallery,
       };
     }
+    case 'CREATE_TEXTBOX': {
+      //payload: {index: number}
+      let newGallery = state.gallery;
+      newGallery.splice(action.payload.index, 0, { text: '' });
+      return {
+        ...state,
+        gallery: newGallery,
+      };
+    }
+    case 'EDIT_TEXTBOX': {
+      //payload: {newText: string, index: number}
+      let newGallery = state.gallery.map((item, index) => {
+        if (action.payload.index == index)
+          return {
+            ...item,
+            text: action.payload.newText,
+          };
+        return item;
+      });
+
+      return {
+        ...state,
+        gallery: newGallery,
+      };
+    }
+    case 'DELETE_TEXTBOX': {
+      //payload: {index: number}
+      let newGallery = state.gallery;
+      newGallery.splice(action.payload.index, 1);
+      return {
+        ...state,
+        gallery: newGallery,
+      };
+    }
     default: {
       return state;
     }
