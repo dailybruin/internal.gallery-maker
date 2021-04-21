@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from os import getenv
+# from os import getenv
 from base64 import b64encode
 import os
 # import base64
@@ -39,10 +39,10 @@ class GalleryRetrieve(generics.RetrieveAPIView):
 @csrf_exempt
 def uploadToWordPress(request):
     user = WP_USERNAME
-    pw = os.getenv("WP_PWD")
+    pw = WP_PWD
     auth_string = f"{user}:{pw}"
     auth_data = auth_string.encode("utf-8")
-    url = os.getenv("WP_URL")
+    url = WP_URL
     file_type = request.FILES['image'].content_type
     basic_auth_header = {
         'content-Type': str(file_type),
@@ -57,14 +57,14 @@ def uploadToWordPress(request):
     data=image.open('rb').read()
     wp_res = ""
     wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
-    print(wp_res.text)
+    # print(wp_res.text)
     if wp_res.ok:
         res_json = wp_res.json()
-        print(f"Successfully uploaded image {file_name} to WordPress")
+        # print(f"Successfully uploaded image {file_name} to WordPress")
         return JsonResponse({"ok" : "true"});
     else:
         err_message = f"Unable to upload image {file_name} to WordPress"
-        print("Fail")
+        # print("Fail")
         # raise PublishError(err_message)
         return JsonResponse({"ok" : "false",
                              "message": err_message});
