@@ -9,10 +9,10 @@ import { API_ROOT } from '../constants/api';
 import { LoginWrapper } from '../components/LoginWrapper';
 
 function App() {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
-    // getAuthentication();
+    getAuthentication();
   });
   const getAuthentication = async () => {
     let response = await fetch(`${API_ROOT}/oauth/get_logged_in`);
