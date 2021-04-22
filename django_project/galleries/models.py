@@ -46,15 +46,15 @@ class Image(models.Model):
     # type of image (center, alternating)
     CENTER_PHOTO= 'center-photo'
     ALT_PHOTO = 'alt-photo'
-    BIG_CENTERED_PHOTO = 'big-centered-photo'
+    BIG_CENTER_PHOTO = 'big-center-photo'
 
     POSSIBLE_TYPE_CHOICES = [
         (CENTER_PHOTO, CENTER_PHOTO),
         (ALT_PHOTO, ALT_PHOTO),
-        (BIG_CENTERED_PHOTO, BIG_CENTERED_PHOTO)
+        (BIG_CENTER_PHOTO, BIG_CENTER_PHOTO)
     ]
     type = models.CharField(
-        max_length=18,
+        max_length=16,
         choices=POSSIBLE_TYPE_CHOICES,
         default = ALT_PHOTO
     )
