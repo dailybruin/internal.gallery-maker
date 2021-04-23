@@ -98,7 +98,15 @@ function CreateUpdateGallery(props) {
         setCurStep(curStep - 1);
     };
 
-    const submitbutton = props.match.path === '/update/:id'? <SubmitButton id={props.match.params.id}/>:<SubmitButton/>
+    const handleSubmit = () => {
+        setDirty(false);
+    }
+
+    const submitbutton = props.match.path === '/update/:id' ? 
+        <SubmitButton id={props.match.params.id}
+            onSubmit={handleSubmit}/> :
+        <SubmitButton 
+            onSubmit={handleSubmit}/>
 
     return (
         <div>

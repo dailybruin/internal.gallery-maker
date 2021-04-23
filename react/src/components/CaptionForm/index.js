@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import "./caption.css"
 import { MAX_CAPTION_LEN, MAX_CREDIT_LEN } from "constants/formInput"
+import { galleryOptions, readableNames } from 'constants/galleryLayouts';
 
 const { TextArea } = Input
 
@@ -32,6 +33,7 @@ function CaptionImagePair(props){
 
    const [caption, setCaption] = useState(props.initialCaption)
    const [credit, setCredit] = useState(props.initialCredit)
+   const [type, setType] = useState(props.initialType)
 
    const dispatch = useDispatch()
 
@@ -57,6 +59,17 @@ function CaptionImagePair(props){
     })
    }
 
+   function updateStateAndReduxType(value) {
+       setType(value);
+       dispatch({
+           type: "EDIT_TYPE",
+           payload: {
+               url: props.img_url,
+               newType: value
+           }
+       });
+   }
+
    return (
     <div className="image-caption-row">
         <img className="caption-image" src={props.img_url}/>
@@ -77,11 +90,21 @@ function CaptionImagePair(props){
                     onChange={e => updateStateAndReduxCredit(e.target.value)}
                 />
             </Form.Item>
+            <Form.Item label="Type">
+                <Select
+                    value={type}
+                    onChange={updateStateAndReduxType}>
+                    {
+                        props.imageTypes.map(type => 
+                            <Select.Option value={type} key={type}>{readableNames[type]}</Select.Option>
+                        )
+                    }
+                </Select>
+            </Form.Item>
         </div>
     </div>
    )
 }
-
 
 const selectorForGallery = state => state.editGallery.gallery;
 const equalityCheck = (newState, state) => {
@@ -109,8 +132,8 @@ function CaptionsForm() {
     // however, as long as the image urls don't change, we don't need to re run this
     // so in order to prevent this, we use a custom equality check which actually
     // compares the img urls in the old state and the new redux state.
-    const gallery =  useSelector(selectorForGallery, equalityCheck); 
-
+    const gallery =  useSelector(selectorForGallery, equalityCheck);
+    const galleryLayout = useSelector(state => state.editGallery.layout);
 
     return (<div className="caption-container">
         <h2> Captions and Credits </h2>
@@ -119,7 +142,8 @@ function CaptionsForm() {
             img_url={img.url} 
             initialCaption={img.caption}
             initialCredit={img.credits}
-
+            initialType={img.type}
+            imageTypes={galleryOptions[galleryLayout]}
             />)}
     </div>)
 
