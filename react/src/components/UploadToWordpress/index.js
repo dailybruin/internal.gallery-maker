@@ -2,6 +2,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { API_ROOT } from '../../constants/api';
+import { upload } from '../../api/galleries';
+
 class UploadToWordpress extends Component{
     state = {
         title: '',
@@ -22,32 +24,12 @@ class UploadToWordpress extends Component{
       };
     
       handleSubmit = (e) => {
-        axios.defaults.xsrfCookieName = 'csrftoken';
-        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-        e.preventDefault();
-        console.log(this.state);
-        let form_data = new FormData();
-        form_data.append('image', this.state.image, this.state.image.name);
-        form_data.append('title', this.state.title);
-        form_data.append('content', this.state.content);
-        let url = API_ROOT + '/gallery/upload';
-        const headers = {
-            'content-type': 'multipart/form-data'
-            // 'Authorization': 'JWT fefege...'
-          };
-        axios.post(url, form_data, {
-          headers: headers
-        })
-            .then(res => {
-              // let response = res.
-              console.log(res.data);
-              if (res.data["ok"] === "false")
-                alert(res.data["message"]);
-              else
-                alert("Successful update!");
-              
-            })
-            .catch(err => console.log(err))
+        console.log(e);
+        let image = this.state.image;
+        let image_name = this.state.image.name;
+        let title = this.state.title;
+        let content = this.state.content;
+        upload(e,image,image_name,title,content);
       };
     
       render() {
@@ -64,7 +46,8 @@ class UploadToWordpress extends Component{
               <p>
                 <input type="file"
                        id="image"
-                       accept="image/png, image/jpeg"  onChange={this.handleImageChange} required/>
+                       accept="image/png, image/jpeg"
+                       onChange={this.handleImageChange} required/>
               </p>
               <input type="submit"/>
             </form>

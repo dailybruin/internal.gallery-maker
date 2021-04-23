@@ -58,15 +58,16 @@ def uploadToWordPress(request):
     wp_res = ""
     wp_res = requests.post(f"{url}/wp-json/wp/v2/media", headers=headers, data=data)
     # print(wp_res.text)
+    # print(wp_res.data)
     if wp_res.ok:
         res_json = wp_res.json()
-        # print(f"Successfully uploaded image {file_name} to WordPress")
-        return JsonResponse({"ok" : "true"});
+        print(f"Successfully uploaded image {file_name} to WordPress")
+        return JsonResponse({"ok" : True});
     else:
         err_message = f"Unable to upload image {file_name} to WordPress"
         # print("Fail")
         # raise PublishError(err_message)
-        return JsonResponse({"ok" : "false",
+        return JsonResponse({"ok" : False,
                              "message": err_message});
        
 
