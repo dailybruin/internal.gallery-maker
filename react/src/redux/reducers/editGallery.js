@@ -93,17 +93,20 @@ const editGallery = (state = initialState, action) => {
       //payload: {index: number, location: string}
       let newGallery = state.gallery;
       let previousIndex;
+      if (action.payload.location == 'first') previousIndex = 0; // Workaround for the first textbox
       let i = 1;
-      for (let item of state.gallery) {
-        if ('url' in item && item.url == action.payload.location) {
-          previousIndex = i;
-          break;
-        } else if ('text' in item && item.id == action.payload.location) {
-          previousIndex = i;
-          break;
-        } else i++;
+      if (typeof previousIndex === 'undefined') {
+        for (let item of state.gallery) {
+          if ('url' in item && item.url == action.payload.location) {
+            previousIndex = i;
+            break;
+          } else if ('text' in item && item.id == action.payload.location) {
+            previousIndex = i;
+            break;
+          } else i++;
+        }
       }
-      // if (!previousIndex) return state;
+      if (typeof previousIndex === 'undefined') return state;
       newGallery.splice(previousIndex, 0, {
         text: '',
         id: action.payload.id,

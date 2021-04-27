@@ -55,25 +55,27 @@ function CaptionImagePair(props) {
   }
 
   return (
-    <div className="image-caption-row">
-      <img className="caption-image" src={props.img_url} />
-      <div>
-        <Form.Item label="Caption">
-          <TextArea
-            maxLength={MAX_CAPTION_LEN}
-            showCount
-            value={caption}
-            onChange={(e) => updateStateAndReduxCaption(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Credit">
-          <TextArea
-            maxLength={MAX_CREDIT_LEN}
-            showCount
-            value={credit}
-            onChange={(e) => updateStateAndReduxCredit(e.target.value)}
-          />
-        </Form.Item>
+    <div>
+      <div className="image-caption-row">
+        <img className="caption-image" src={props.img_url} />
+        <div>
+          <Form.Item label="Caption">
+            <TextArea
+              maxLength={MAX_CAPTION_LEN}
+              showCount
+              value={caption}
+              onChange={(e) => updateStateAndReduxCaption(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Credit">
+            <TextArea
+              maxLength={MAX_CREDIT_LEN}
+              showCount
+              value={credit}
+              onChange={(e) => updateStateAndReduxCredit(e.target.value)}
+            />
+          </Form.Item>
+        </div>
       </div>
       <AddTextBoxButton id={props.img_url} />
     </div>
@@ -156,7 +158,11 @@ function AddTextBoxButton(props) {
       },
     });
   };
-  return <Button onClick={insertTextBox}>Add Text Box</Button>;
+  return (
+    <Button className="add-text-button" onClick={insertTextBox}>
+      Add Text Box
+    </Button>
+  );
 }
 
 function CaptionsForm() {
@@ -174,6 +180,7 @@ function CaptionsForm() {
   return (
     <div classname="caption-container">
       <h2> captions and credits </h2>
+      <AddTextBoxButton id="first" />
       {gallery.map((item, index) => {
         if ('url' in item) {
           return (
