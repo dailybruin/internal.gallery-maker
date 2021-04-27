@@ -90,9 +90,21 @@ const editGallery = (state = initialState, action) => {
       };
     }
     case 'CREATE_TEXTBOX': {
-      //payload: {index: number, id: string}
+      //payload: {index: number, location: string}
       let newGallery = state.gallery;
-      newGallery.splice(action.payload.index, 0, {
+      let previousIndex;
+      let i = 1;
+      for (let item of state.gallery) {
+        if ('url' in item && item.url == action.payload.location) {
+          previousIndex = i;
+          break;
+        } else if ('text' in item && item.id == action.payload.location) {
+          previousIndex = i;
+          break;
+        } else i++;
+      }
+      // if (!previousIndex) return state;
+      newGallery.splice(previousIndex, 0, {
         text: '',
         id: action.payload.id,
       });

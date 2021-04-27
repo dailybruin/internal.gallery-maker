@@ -75,26 +75,27 @@ function CaptionImagePair(props) {
           />
         </Form.Item>
       </div>
+      <AddTextBoxButton id={props.img_url} />
     </div>
   );
 }
 
 const selectorForGallery = (state) => state.editGallery.gallery;
-const equalityCheck = (newState, state) => {
-  // console.log("old state")
-  // console.log(state);
-  console.log('new state');
-  console.log(newState);
+// const equalityCheck = (newState, state) => {
+// // console.log("old state")
+// // console.log(state);
+// console.log('new state');
+// console.log(newState);
 
-  if (state.length != newState.length) return false;
-  for (let i = 0; i < state.length; i++) {
-    if (state[i].url != newState[i].url) return false;
-  }
-  return true;
-};
+// if (state.length != newState.length) return false;
+// for (let i = 0; i < state.length; i++) {
+// if (state[i].url != newState[i].url) return false;
+// }
+// return true;
+// };
 
 function TextBox(props) {
-  // props: {key: string, content: string, id: string}
+  // props: {key: string, content: string, id: string, index: number}
   const [text, setText] = useState(props.content);
 
   const dispatch = useDispatch();
@@ -135,19 +136,22 @@ function TextBox(props) {
       <div className="delete-textbox-button">
         <Button onClick={deleteTextbox}>Delete Textbox</Button>
       </div>
+      <AddTextBoxButton id={props.id} />
     </div>
   );
 }
 
 function AddTextBoxButton(props) {
   //props: {index: number}
+  // newprops: {id: string}
   const dispatch = useDispatch();
   let newID = uuidv4();
   const insertTextBox = () => {
     dispatch({
       type: 'CREATE_TEXTBOX',
       payload: {
-        index: props.index,
+        // index: props.index,
+        location: props.id,
         id: newID,
       },
     });
@@ -165,7 +169,8 @@ function CaptionsForm() {
   // however, as long as the image urls don't change, we don't need to re run this
   // so in order to prevent this, we use a custom equality check which actually
   // compares the img urls in the old state and the new redux state.
-  const gallery = useSelector(selectorForGallery, equalityCheck);
+  const gallery = useSelector(selectorForGallery);
+  // const gallery = useSelector(selectorForGallery, equalityCheck);
   return (
     <div classname="caption-container">
       <h2> captions and credits </h2>
@@ -178,15 +183,19 @@ function CaptionsForm() {
                 img_url={item.url}
                 initialCaption={item.caption}
                 initialCredit={item.credits}
+                index={index}
               />
-              <AddTextBoxButton index={index + 1} />
             </div>
           );
         } else if ('text' in item) {
           return (
             <div className="item-container">
-              <TextBox content={item.text} key={item.id} id={item.id} />
-              <AddTextBoxButton index={index + 1} />
+              <TextBox
+                content={item.text}
+                key={item.id}
+                id={item.id}
+                index={index}
+              />
             </div>
           );
         }
