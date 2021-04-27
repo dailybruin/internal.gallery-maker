@@ -108,6 +108,7 @@ const editGallery = (state = initialState, action) => {
       }
       if (typeof previousIndex === 'undefined') return state;
       newGallery.splice(previousIndex, 0, {
+        type: 'text',
         text: '',
         id: action.payload.id,
       });

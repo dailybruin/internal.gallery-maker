@@ -38,6 +38,7 @@ function CreateUpdateGallery(props) {
         .get(`${API_ROOT}/gallery/${props.match.params.id}`)
         .then((res) => {
           let reduxGallery = res.data.images.map((img) => ({
+            type: 'image',
             url: img.img_url,
             caption: img.description,
             credits: img.credits,
