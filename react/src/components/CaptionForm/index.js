@@ -3,7 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import './caption.css';
 import { MAX_CAPTION_LEN, MAX_CREDIT_LEN } from 'constants/formInput';
-
+import { v4 as uuidv4 } from 'uuid';
 const { TextArea } = Input;
 
 // helper component
@@ -94,28 +94,29 @@ const equalityCheck = (newState, state) => {
 };
 
 function TextBox(props) {
-  // props: {text: string, key: number, initialText: string, index: number}
-  const [text, setText] = useState(props.initialText);
+  // props: {key: string, content: string, id: string}
+  const [text, setText] = useState(props.content);
 
   const dispatch = useDispatch();
 
   function updateStateAndReduxText(value) {
     setText(value);
-    console.log('index to edit:', props.index);
+    console.log('editing id:', props.id);
     dispatch({
       type: 'EDIT_TEXTBOX',
       payload: {
-        index: props.index,
+        id: props.id,
         newText: value,
       },
     });
   }
 
   function deleteTextbox() {
+    console.log('deleting id:', props.id);
     dispatch({
       type: 'DELETE_TEXTBOX',
       payload: {
-        index: props.index,
+        id: props.id,
       },
     });
   }
@@ -141,11 +142,13 @@ function TextBox(props) {
 function AddTextBoxButton(props) {
   //props: {index: number}
   const dispatch = useDispatch();
+  let newID = uuidv4();
   const insertTextBox = () => {
     dispatch({
       type: 'CREATE_TEXTBOX',
       payload: {
         index: props.index,
+        id: newID,
       },
     });
   };
@@ -182,7 +185,7 @@ function CaptionsForm() {
         } else if ('text' in item) {
           return (
             <div className="item-container">
-              <TextBox content={item.text} key={index} index={index} />
+              <TextBox content={item.text} key={item.id} id={item.id} />
               <AddTextBoxButton index={index + 1} />
             </div>
           );

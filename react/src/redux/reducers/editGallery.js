@@ -90,18 +90,21 @@ const editGallery = (state = initialState, action) => {
       };
     }
     case 'CREATE_TEXTBOX': {
-      //payload: {index: number}
+      //payload: {index: number, id: string}
       let newGallery = state.gallery;
-      newGallery.splice(action.payload.index, 0, { text: '' });
+      newGallery.splice(action.payload.index, 0, {
+        text: '',
+        id: action.payload.id,
+      });
       return {
         ...state,
         gallery: newGallery,
       };
     }
     case 'EDIT_TEXTBOX': {
-      //payload: {newText: string, index: number}
+      //payload: {newText: string, id: string}
       let newGallery = state.gallery.map((item, index) => {
-        if (action.payload.index == index)
+        if (action.payload.id == item.id)
           return {
             ...item,
             text: action.payload.newText,
@@ -115,9 +118,12 @@ const editGallery = (state = initialState, action) => {
       };
     }
     case 'DELETE_TEXTBOX': {
-      //payload: {index: number}
-      let newGallery = state.gallery;
-      newGallery.splice(action.payload.index, 1);
+      //payload: {id: string}
+      let newGallery = state.gallery.filter(
+        (item) => item.id != action.payload.id
+      );
+      // newGallery.splice(action.payload.index, 1);
+      console.log('redux newGallery (new state after delete)', newGallery);
       return {
         ...state,
         gallery: newGallery,
