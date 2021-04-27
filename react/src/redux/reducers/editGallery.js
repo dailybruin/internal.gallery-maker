@@ -7,9 +7,16 @@ const initialState = {
 /*
     gallery: 
       [
+        type: 'image';
         url: string;
         caption: string;
-      ]; // i think?
+      ] // i think?
+      || 
+      [
+        type: 'text';
+        text: string;
+        id: string;
+      ];
       name: string;
       layout: string;
       description: string;
