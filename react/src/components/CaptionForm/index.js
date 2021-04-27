@@ -81,18 +81,18 @@ function CaptionImagePair(props) {
 }
 
 const selectorForGallery = (state) => state.editGallery.gallery;
-// const equalityCheck = (newState, state) => {
-// // console.log("old state")
-// // console.log(state);
-// console.log('new state');
-// console.log(newState);
+const equalityCheck = (newState, state) => {
+  // console.log("old state")
+  // console.log(state);
+  console.log('new state');
+  console.log(newState);
 
-// if (state.length != newState.length) return false;
-// for (let i = 0; i < state.length; i++) {
-// if (state[i].url != newState[i].url) return false;
-// }
-// return true;
-// };
+  // if (state.length != newState.length) return false;
+  // for (let i = 0; i < state.length; i++) {
+  // if (state[i].url != newState[i].url) return false;
+  // }
+  return false;
+};
 
 function TextBox(props) {
   // props: {key: string, content: string, id: string, index: number}
@@ -169,8 +169,8 @@ function CaptionsForm() {
   // however, as long as the image urls don't change, we don't need to re run this
   // so in order to prevent this, we use a custom equality check which actually
   // compares the img urls in the old state and the new redux state.
-  const gallery = useSelector(selectorForGallery);
-  // const gallery = useSelector(selectorForGallery, equalityCheck);
+  // const gallery = useSelector(selectorForGallery);
+  const gallery = useSelector(selectorForGallery, equalityCheck);
   return (
     <div classname="caption-container">
       <h2> captions and credits </h2>
