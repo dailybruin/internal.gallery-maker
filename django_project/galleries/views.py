@@ -9,6 +9,12 @@ from django.db import transaction
 from django.contrib.auth.decorators import login_required
 
 
+
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Pastebin API')
+
+
 class GalleryViewSet(viewsets.ModelViewSet):
     queryset = Gallery.objects.all()
     serializer_class = GallerySerializer
@@ -83,3 +89,7 @@ def create_or_update_gallery(request):
         # }
         # create gallery first, get id, then create many image objects with that gallery object id
         # 
+
+# urlpatterns = [
+#     url(r'^$', schema_view)
+# ]

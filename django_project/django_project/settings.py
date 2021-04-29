@@ -71,7 +71,9 @@ INSTALLED_APPS = [
 
     'utils',
     'galleries',
-    'oauth'
+    'oauth',
+
+    'rest_framework_swagger',
 ]
 
 MIDDLEWARE = [
@@ -102,8 +104,16 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+
+            'libraries': {  
+                'staticfiles': 'django.templatetags.static',
+            },
         },
+
+        
+
     },
+    
 ]
 
 WSGI_APPLICATION = 'django_project.wsgi.application'
@@ -208,6 +218,12 @@ LOGGING = {
         },
     }
 }
+
+REST_FRAMEWORK = {
+
+  'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}
+
 
 # Usage:
 # logger = logging.getLogger('oauth')
