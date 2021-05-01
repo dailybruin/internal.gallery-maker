@@ -30,7 +30,7 @@ class GalleryRetrieve(generics.RetrieveAPIView):
     serializer_class = MainSiteGallerySerializer
 
 @api_view(["POST"])
-@login_required
+# @login_required
 @transaction.atomic
 def create_or_update_gallery(request):
     data = request.data.copy()
@@ -44,16 +44,16 @@ def create_or_update_gallery(request):
     for index, item in enumerate(data["data"]):
         if "metatype" not in item:
             return JsonResponse({
-                "response": f"Data object at index {index} has no metatype"
+                "response": f"Data object at index {index} has no 'metatype' field"
                 }, status=400)
         if item["metatype"] == "image":
-            required_fields = ["caption", "url", "credits"]
+            required_fields = ["caption", "url", "credits", "type"]
         elif item["metatype"] == "text":
             required_fields = ["content"]
         for field in required_fields:
             if field not in item:
                 return JsonResponse({
-                    "response": f"Required field {field} does not exist in {item['metatype']} at index {index}"
+                    "response": f"Required field '{field}' does not exist in data object at index {index}"
                 }, status=400)
 
     gallery_serializer = None
