@@ -51,8 +51,8 @@ def get_images_and_text(
     # index for data, image_data, and textfield_data respectively
     i, image_idx, text_idx = 0, 0, 0
     while i < len(image_data) + len(textfield_data):
-        # add the next object whose index === i
-        if image_data[image_idx]["index"] == i:
+        # add the next object whose index == i
+        if image_idx < len(image_data) and image_data[image_idx]["index"] == i:
             data.append(image_data[image_idx])
             image_idx += 1
         else:

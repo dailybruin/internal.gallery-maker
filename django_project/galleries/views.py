@@ -30,7 +30,7 @@ class GalleryRetrieve(generics.RetrieveAPIView):
     serializer_class = MainSiteGallerySerializer
 
 @api_view(["POST"])
-# @login_required
+@login_required
 @transaction.atomic
 def create_or_update_gallery(request):
     data = request.data.copy()
