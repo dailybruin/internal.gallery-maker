@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Form, Input } from 'antd';
+
+import { Select, Button, Form, Input } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import './caption.css';
 import { MAX_CAPTION_LEN, MAX_CREDIT_LEN } from 'constants/formInput';
 import { v4 as uuidv4 } from 'uuid';
+import { galleryOptions, readableNames } from 'constants/galleryLayouts';
 const { TextArea } = Input;
 
 // helper component
@@ -29,6 +31,7 @@ function CaptionImagePair(props) {
 
   const [caption, setCaption] = useState(props.initialCaption);
   const [credit, setCredit] = useState(props.initialCredit);
+  const [type, setType] = useState(props.initialType);
 
   const dispatch = useDispatch();
 
@@ -54,28 +57,46 @@ function CaptionImagePair(props) {
     });
   }
 
+  function updateStateAndReduxType(value) {
+    setType(value);
+    dispatch({
+      type: 'EDIT_TYPE',
+      payload: {
+        url: props.img_url,
+        newType: value,
+      },
+    });
+  }
+
   return (
-    <div>
-      <div className="image-caption-row">
-        <img className="caption-image" src={props.img_url} />
-        <div>
-          <Form.Item label="Caption">
-            <TextArea
-              maxLength={MAX_CAPTION_LEN}
-              showCount
-              value={caption}
-              onChange={(e) => updateStateAndReduxCaption(e.target.value)}
-            />
-          </Form.Item>
-          <Form.Item label="Credit">
-            <TextArea
-              maxLength={MAX_CREDIT_LEN}
-              showCount
-              value={credit}
-              onChange={(e) => updateStateAndReduxCredit(e.target.value)}
-            />
-          </Form.Item>
-        </div>
+    <div className="image-caption-row">
+      <img className="caption-image" src={props.img_url} />
+      <div>
+        <Form.Item label="Caption">
+          <TextArea
+            maxLength={MAX_CAPTION_LEN}
+            showCount
+            value={caption}
+            onChange={(e) => updateStateAndReduxCaption(e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item label="Credit">
+          <TextArea
+            maxLength={MAX_CREDIT_LEN}
+            showCount
+            value={credit}
+            onChange={(e) => updateStateAndReduxCredit(e.target.value)}
+          />
+        </Form.Item>
+        <Form.Item label="Type">
+          <Select value={type} onChange={updateStateAndReduxType}>
+            {props.imageTypes.map((type) => (
+              <Select.Option value={type} key={type}>
+                {readableNames[type]}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
       </div>
       <AddTextBoxButton id={props.img_url} />
     </div>
@@ -177,6 +198,7 @@ function CaptionsForm() {
   // compares the img urls in the old state and the new redux state.
   // const gallery = useSelector(selectorForGallery);
   const gallery = useSelector(selectorForGallery, equalityCheck);
+  const galleryLayout = useSelector((state) => state.editGallery.layout);
   return (
     <div classname="caption-container">
       <h2> captions and credits </h2>
@@ -191,6 +213,8 @@ function CaptionsForm() {
                 initialCaption={item.caption}
                 initialCredit={item.credits}
                 index={index}
+                initialType={item.type}
+                imageTypes={galleryOptions[galleryLayout]}
               />
             </div>
           );
