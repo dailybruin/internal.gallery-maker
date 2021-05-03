@@ -69,34 +69,36 @@ function CaptionImagePair(props) {
   }
 
   return (
-    <div className="image-caption-row">
-      <img className="caption-image" src={props.img_url} />
-      <div>
-        <Form.Item label="Caption">
-          <TextArea
-            maxLength={MAX_CAPTION_LEN}
-            showCount
-            value={caption}
-            onChange={(e) => updateStateAndReduxCaption(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Credit">
-          <TextArea
-            maxLength={MAX_CREDIT_LEN}
-            showCount
-            value={credit}
-            onChange={(e) => updateStateAndReduxCredit(e.target.value)}
-          />
-        </Form.Item>
-        <Form.Item label="Type">
-          <Select value={type} onChange={updateStateAndReduxType}>
-            {props.imageTypes.map((type) => (
-              <Select.Option value={type} key={type}>
-                {readableNames[type]}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+    <div className="image-caption-container">
+      <div className="image-caption-row">
+        <img className="caption-image" src={props.img_url} />
+        <div>
+          <Form.Item label="Caption">
+            <TextArea
+              maxLength={MAX_CAPTION_LEN}
+              showCount
+              value={caption}
+              onChange={(e) => updateStateAndReduxCaption(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Credit">
+            <TextArea
+              maxLength={MAX_CREDIT_LEN}
+              showCount
+              value={credit}
+              onChange={(e) => updateStateAndReduxCredit(e.target.value)}
+            />
+          </Form.Item>
+          <Form.Item label="Type">
+            <Select value={type} onChange={updateStateAndReduxType}>
+              {props.imageTypes.map((type) => (
+                <Select.Option value={type} key={type}>
+                  {readableNames[type]}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+        </div>
       </div>
       <AddTextBoxButton id={props.img_url} />
     </div>
