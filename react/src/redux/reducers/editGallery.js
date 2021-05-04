@@ -9,13 +9,13 @@ const initialState = {
 /*
     gallery: 
       [
-        type: 'image';
+        metatype: 'image';
         url: string;
         caption: string;
       ] // i think?
       || 
       [
-        type: 'text';
+        metatype: 'text';
         text: string;
         id: string;
       ];
