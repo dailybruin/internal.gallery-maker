@@ -37,7 +37,10 @@ class Image(models.Model):
     # photo creds
     credits = models.TextField(max_length=50, blank=True)
 
-    # specify order of imgs
+    # NOTE: this index specifies ordering and is shared with GalleryTextField.index
+    # For example, for the following gallery: [ Image1, Text1, Image2],
+    # The respective index fields will be:
+    #   Image1.index = 0, Text1.index = 1, Image2.index = 2
     index = models.IntegerField()
 
     # foreign key
@@ -63,3 +66,18 @@ class Image(models.Model):
         ordering = ['index']
 
 
+class GalleryTextField(models.Model):
+    # Actual content of text field
+    content = models.TextField()
+
+    # Foreign key
+    gallery = models.ForeignKey(Gallery, on_delete=models.CASCADE, related_name="textfields")
+
+    # NOTE: this index specifies ordering and is shared with Image.index
+    # For example, for the following gallery: [ Image1, Text1, Image2],
+    # The respective index fields will be:
+    #   Image1.index = 0, Text1.index = 1, Image2.index = 2
+    index = models.IntegerField()
+
+    class Meta:
+        ordering = ['index']
