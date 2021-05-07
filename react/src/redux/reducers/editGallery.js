@@ -44,9 +44,6 @@ const editGallery = (state = initialState, action) => {
         gallery: newGallery,
       };
     }
-    case 'RESET_GALLERY': {
-      return initialState;
-    }
     case 'EDIT_DESCRIPTION': {
       return {
         ...state,
