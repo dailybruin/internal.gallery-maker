@@ -119,6 +119,7 @@ function SelectImages(props) {
         payload: [
           ...reduxGallery,
           {
+            metatype: 'image',
             url: clickedImg.sourceURL,
             caption: '',
             credits: '',
