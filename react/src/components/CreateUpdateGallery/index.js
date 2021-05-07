@@ -111,7 +111,7 @@ function CreateUpdateGallery(props) {
     );
 
   return (
-    <div>
+    <div className="page-container">
       <Prompt
         when={dirty}
         message="You have unsaved changes. Are you sure you want to leave this page?"
