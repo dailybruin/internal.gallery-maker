@@ -37,7 +37,7 @@ function CreateUpdateGallery(props) {
       axios
         .get(`${API_ROOT}/gallery/${props.match.params.id}`)
         .then((res) => {
-          let reduxGallery = res.data.images.map((img) => ({
+          let reduxGallery = res.data.data.map((img) => ({
             metatype: 'image',
             url: img.img_url,
             caption: img.description,

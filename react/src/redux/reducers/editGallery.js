@@ -16,7 +16,7 @@ const initialState = {
       || 
       [
         metatype: 'text';
-        text: string;
+        content: string;
         id: string;
       ];
       name: string;
@@ -111,10 +111,13 @@ const editGallery = (state = initialState, action) => {
       let i = 1;
       if (typeof previousIndex === 'undefined') {
         for (let item of state.gallery) {
-          if ('url' in item && item.url == action.payload.location) {
+          if (item.metatype == 'image' && item.url == action.payload.location) {
             previousIndex = i;
             break;
-          } else if ('text' in item && item.id == action.payload.location) {
+          } else if (
+            item.metatype == 'text' &&
+            item.id == action.payload.location
+          ) {
             previousIndex = i;
             break;
           } else i++;
@@ -123,7 +126,7 @@ const editGallery = (state = initialState, action) => {
       if (typeof previousIndex === 'undefined') return state;
       newGallery.splice(previousIndex, 0, {
         metatype: 'text',
-        text: '',
+        content: '',
         id: action.payload.id,
       });
       return {
@@ -137,7 +140,7 @@ const editGallery = (state = initialState, action) => {
         if (action.payload.id == item.id)
           return {
             ...item,
-            text: action.payload.newText,
+            content: action.payload.newText,
           };
         return item;
       });

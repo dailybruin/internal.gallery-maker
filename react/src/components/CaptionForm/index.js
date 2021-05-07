@@ -206,7 +206,7 @@ function CaptionsForm() {
       <h2> captions and credits </h2>
       <AddTextBoxButton id="first" />
       {gallery.map((item, index) => {
-        if ('url' in item) {
+        if (item.metatype == 'image') {
           return (
             <div className="item-container">
               <CaptionImagePair
@@ -220,11 +220,11 @@ function CaptionsForm() {
               />
             </div>
           );
-        } else if ('text' in item) {
+        } else if (item.metatype == 'text') {
           return (
             <div className="item-container">
               <TextBox
-                content={item.text}
+                content={item.content}
                 key={item.id}
                 id={item.id}
                 index={index}

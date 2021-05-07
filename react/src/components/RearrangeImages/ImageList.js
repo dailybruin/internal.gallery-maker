@@ -45,7 +45,7 @@ const Image = ({ image, index, moveImage }) => {
         <img alt={`img - ${image.url}`} src={image.url} className="file-img" />
       ) : (
         <div>
-          <p>{image.text}</p>
+          <p>{image.content}</p>
         </div>
       )}
     </div>
@@ -54,7 +54,7 @@ const Image = ({ image, index, moveImage }) => {
 
 const ImageList = ({ images, moveImage }) => {
   const renderImage = (item, index) => {
-    if ('url' in item) {
+    if (item.metatype == 'image') {
       return (
         <Image
           image={item}
@@ -63,7 +63,7 @@ const ImageList = ({ images, moveImage }) => {
           moveImage={moveImage}
         />
       );
-    } else if ('text' in item) {
+    } else if (item.metatype == 'text') {
       return (
         <Image image={item} index={index} key={item.id} moveImage={moveImage} />
       );
