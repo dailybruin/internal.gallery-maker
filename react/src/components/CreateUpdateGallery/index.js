@@ -37,13 +37,23 @@ function CreateUpdateGallery(props) {
       axios
         .get(`${API_ROOT}/gallery/${props.match.params.id}`)
         .then((res) => {
-          let reduxGallery = res.data.data.map((img) => ({
-            metatype: 'image',
-            url: img.img_url,
-            caption: img.description,
-            credits: img.credits,
-            type: img.type,
-          }));
+          let reduxGallery = res.data.data.map((item) => {
+            if (item.metatype == 'image') {
+              return {
+                metatype: 'image',
+                url: item.img_url,
+                caption: item.description,
+                credits: item.credits,
+                type: item.type,
+              };
+            } else if (item.metatype == 'text') {
+              return {
+                metatype: 'text',
+                content: item.content,
+                id: item.id,
+              };
+            }
+          });
           reduxDispatch({
             type: 'EDIT_GALLERY',
             payload: [...reduxGallery],

@@ -26,7 +26,7 @@ function SelectedImage(props) {
 
 //returns array of selected image urls from redux state
 const selectSelectedImages = (state) => {
-  return state.map((el) => el.url);
+  return state.filter((item) => item.metatype == 'image').map((el) => el.url);
 };
 
 /*
